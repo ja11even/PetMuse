@@ -3,7 +3,7 @@ import { logIn as logInApi } from "../Services/apiAuth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-export function LogIn() {
+export function useLogIn() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   return useMutation({

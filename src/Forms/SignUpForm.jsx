@@ -36,7 +36,7 @@ function SignUpForm() {
             type="text"
             id="firstName"
             placeholder="First name"
-            disabled={signUp.isPending}
+            disabled={isPending}
             {...register("firstName", { required: "First  name is required " })}
           />
         </SignUpVerticalRow>
@@ -45,7 +45,7 @@ function SignUpForm() {
             type="text"
             id="lastName"
             placeholder="Last name"
-            disabled={signUp.isPending}
+            disabled={isPending}
             {...register("lastName", { required: "Last name is required" })}
           />
         </SignUpVerticalRow>
@@ -55,7 +55,7 @@ function SignUpForm() {
           type="email"
           id="email"
           placeholder="you@example.com"
-          disabled={signUp.isPending}
+          disabled={isPending}
           {...register(
             "email",
             { required: "Email address is required" },
@@ -74,7 +74,7 @@ function SignUpForm() {
             type={showPassword ? "text" : "password"}
             id="password"
             placeholder="Create a strong password"
-            disabled={signUp.isPending}
+            disabled={isPending}
             {...register("password", {
               required: "Password is required",
               minLength: {
