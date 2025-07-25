@@ -18,7 +18,7 @@ const emptyDefaultValues = {
   unit: null,
 };
 function AddPetModal({ isOpen, onClose, mode, initialPetData }) {
-  const [uploading, setUploading] = useState(false);
+  const [_uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const { user, isLoadingUser } = useUser();
@@ -57,6 +57,12 @@ function AddPetModal({ isOpen, onClose, mode, initialPetData }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onCloseAndReset]);
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     function handleKeyDown(e) {
@@ -339,12 +345,17 @@ function AddPetModal({ isOpen, onClose, mode, initialPetData }) {
 const Overlay = styled.div`
   animation: fadeIn 0.3s ease-in-out;
   position: fixed;
-  inset: 0;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  touch-action: none;
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -365,8 +376,9 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   touch-action: none;
+  overscroll-behavior: contain;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -374,6 +386,7 @@ const ModalContainer = styled.div`
   -ms-overflow-style: none;
   @media (max-width: 767px) {
     padding: 1.2rem;
+    padding-bottom: 2rem;
   }
 `;
 const Error = styled.p`
@@ -384,6 +397,8 @@ const Error = styled.p`
 const Title = styled.h2`
   color: #ed4a2f;
   margin-bottom: 1.5rem;
+  font-family: "MyFont";
+  font-weight: 500;
 `;
 const HeaderContainer = styled.div`
   display: flex;

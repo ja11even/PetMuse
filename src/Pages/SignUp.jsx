@@ -102,13 +102,15 @@ const Card = styled.div`
   align-items: center;
   margin-top: 30px;
   width: 470px;
-  min-height: 730px;
+  min-height: 740px;
   max-height: 820px;
   padding: 1.5rem;
   border-radius: 10px;
   @media (max-width: 767px) {
     max-width: 89%;
     padding: 1.5rem 1.1rem;
+    min-height: 760px;
+    max-height: 800px;
   }
 `;
 const CardHeader = styled.div`

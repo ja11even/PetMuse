@@ -8,7 +8,7 @@ export const Heading = styled.h1`
       color: #ed4a2f;
       line-height: 3.7rem;
       font-family: "MyFont";
-      font-weight: 600;
+      font-weight: 500;
       width: 650px;
       @media (max-width: 767px) {
         width: 330px;
@@ -99,7 +99,8 @@ export const Heading = styled.h1`
     css`
       font-size: 1.6rem;
       color: black;
-      font-weight: 600;
+      font-family: "MyFont";
+      font-weight: 500;
     `}
     ${(props) =>
     props.as === "h12" &&

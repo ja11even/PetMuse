@@ -101,7 +101,7 @@ const HeaderText = styled.p`
   font-size: 1.3rem;
   @media (max-width: 767px) {
     max-width: 300px;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
 `;
 const AccordionContainer = styled(motion.div)`

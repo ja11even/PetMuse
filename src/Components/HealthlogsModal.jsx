@@ -2,7 +2,6 @@ import { X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useAddHealthlogs, useUpdateHealthlogs } from "../Hooks/useHealthlogs";
-import { useFetchPets } from "../Hooks/usePets";
 import { useUser } from "../Hooks/useUser";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import TimePicker from "./TimePicker";
@@ -101,6 +100,13 @@ function HealthlogsModal({ isOpen, onClose, mode, initialData }) {
       reset(emptyDefaultValues);
     }
   }, [isOpen, reset, currentDefaultValues]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   function convert24hrs(timeStr) {
     const [time, modifier] = timeStr.split(" ");
@@ -512,9 +518,14 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
-  inset: 0;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  touch-action: none;
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -533,9 +544,10 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 1.5rem;
   padding-bottom: 1.7rem;
+  overscroll-behavior: contain;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -544,6 +556,7 @@ const ModalContainer = styled.div`
   @media (max-width: 767px) {
     padding: 1.2rem;
     touch-action: none;
+    padding-bottom: 2rem;
   }
 `;
 
@@ -561,6 +574,8 @@ const HeaderTitleContainer = styled.div`
 `;
 const Title = styled.h2`
   color: #ed4a2f;
+  font-family: "MyFont";
+  font-weight: 500;
 `;
 const Label = styled.label`
   margin-top: 1rem;
@@ -704,7 +719,9 @@ const ReminderContainer = styled.div`
   align-items: center;
   gap: 1.5rem;
   @media (max-width: 767px) {
-    gap: 0.5rem;
+    gap: 0rem;
+    flex-direction: column;
+    align-items: normal;
   }
 `;
 const ReminderDayContainer = styled.div`
@@ -712,12 +729,18 @@ const ReminderDayContainer = styled.div`
   flex-direction: column;
   width: 50%;
   gap: 0.3rem;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
 `;
 const ReminderTimeContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
   gap: 0.3rem;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
 `;
 const NotesInput = styled.textarea`
   width: 100%;

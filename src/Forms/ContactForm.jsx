@@ -142,6 +142,7 @@ const Button = styled.button`
   height: 45px;
   background-color: #ed4a2f;
   font-family: inherit;
+  font-weight: 400;
   color: #ffffff;
   &:hover {
     cursor: pointer;

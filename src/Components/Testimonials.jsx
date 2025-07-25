@@ -2,31 +2,35 @@ import styled from "styled-components";
 import { Heading } from "./Heading";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-
+import pet6 from "../assets/pettest6.jpg";
+import pet3 from "../assets/pettest3.jpg";
+import pet5 from "../assets/pettest5.jpg";
+import pet1 from "../assets/pettest1.jpg";
+import pet7 from "../assets/pettest7.jpg";
 const TestimonialData = [
   {
     text: "\"Keeping track of my dog's meds used to be a mess. This app makes it so easy. It's made a huge difference in my routine\"",
-    avatar: "/src/assets/pettest6.jpg",
+    avatar: pet6,
     name: "Rosemary & Whiskers 🐱 ",
   },
   {
     text: '"I never forget grooming appointments anymore. The reminders feature is a lifesaver for my busy schedule"',
-    avatar: "/src/assets/pettest3.jpg",
+    avatar: pet3,
     name: "Ngozi & Kai 🐶",
   },
   {
     text: '"Before this app, I kept everything in random notes. Now I actually stay on top of feeding schedules and meds"',
-    avatar: "/src/assets/pettest5.jpg",
+    avatar: pet5,
     name: "John & Max 🐶",
   },
   {
     text: '"This app makes keeping track of my dogs meds so easy"',
-    avatar: "/src/assets/pettest1.jpg",
+    avatar: pet1,
     name: "Maya & Bella 🐶",
   },
   {
     text: '"I manage two cats with special needs. This app helps me stay organized without stress"',
-    avatar: "/src/assets/pettest7.jpg",
+    avatar: pet7,
     name: "Sarah & Porsha 🐱",
   },
 ];
@@ -98,7 +102,7 @@ const HeaderText = styled.p`
   font-size: 1.3rem;
   @media (max-width: 767px) {
     max-width: 300px;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
 `;
 const TestimonialBoxContainer = styled.div`

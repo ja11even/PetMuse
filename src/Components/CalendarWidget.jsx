@@ -37,58 +37,60 @@ function CalendarWidget() {
     </CalendarContainer>
   );
 }
-const CalendarContainer = styled.div``;
+const CalendarContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 const StyledCalendar = styled(Calendar)`
   border: none !important;
   width: 100% !important;
-  height: 551px;
+  max-width: 800px;
+  min-height: 550px;
+  height: auto;
   border-radius: 10px;
   padding: 1.5rem;
   padding-top: 1.2rem;
   padding-bottom: 1.7rem;
   font-family: inherit !important;
+  box-sizing: border-box;
   @media (max-width: 767px) {
     padding: 1rem;
     padding-top: 1.2rem;
     padding-bottom: 1.7rem;
-    height: 510px;
+    min-height: 510px;
   }
   .react-calendar__tile {
-    padding: 1rem 0.2rem;
+    padding: 0.5rem 0.2rem;
     font-size: 1.2rem;
-    margin-bottom: 10px;
+    margin: 0;
     border-radius: 5px;
     transition: 0.2s;
-    width: 70px !important;
-    height: 60px !important;
-    margin-left: 40px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
     &:hover {
       cursor: pointer;
     }
-    @media (max-width: 1024px) {
-      width: 60px !important;
-    }
+
     @media (max-width: 767px) {
-      width: 30px !important;
-      margin-bottom: -20px;
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 0.5rem;
+      height: 45px;
+      font-size: 1rem;
     }
   }
   .react-calendar__month-view__days {
     display: grid !important;
-    grid-template-columns: repeat(7, 150px);
+    grid-template-columns: repeat(7, 1fr);
     justify-content: center;
+    gap: 5px;
+    margin: 0;
     @media (max-width: 1024px) {
-      grid-template-columns: repeat(7, 100px);
-      margin-right: 35px;
+      gap: 3px;
     }
     @media (max-width: 767px) {
-      grid-template-columns: repeat(7, 20px);
-      gap: 20px;
-      margin-right: 98px;
+      gap: 2px;
     }
   }
   .react-calendar__tile--active,
@@ -150,11 +152,23 @@ const StyledCalendar = styled(Calendar)`
     background-color: #fffaf4;
     border-radius: 5px;
     margin-bottom: 10px;
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      gap: 3px;
+    }
+    @media (max-width: 767px) {
+      gap: 2px;
+    }
   }
 
   .react-calendar__month-view__weekdays__weekday {
-    padding: 0.5rem 0.7rem;
+    padding: 0.5rem 0.2rem;
     text-align: center;
+    box-sizing: border-box;
   }
   .react-calendar__month-view__weekdays abbr {
     text-decoration: none;

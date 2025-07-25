@@ -193,7 +193,7 @@ const HeaderText = styled.p`
   font-size: 1.3rem;
   @media (max-width: 767px) {
     max-width: 330px;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
 `;
 const ContainerTwo = styled(motion.div)`

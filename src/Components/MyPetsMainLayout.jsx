@@ -11,6 +11,7 @@ import {
   Ellipsis,
   Heart,
   NotebookPen,
+  PartyPopper,
   PawPrint,
   Plus,
   SquarePen,
@@ -54,13 +55,6 @@ function MyPetsMainLayout() {
   const Healthlog = allHealthlogs?.data;
   const Appointment = allAppointments?.data;
   const Note = allNotes?.data;
-  function truncateTitle(text) {
-    const isMobile = window.innerWidth <= 767;
-    const limit = isMobile ? 3 : 6;
-    const words = text.split(" ");
-    if (words.length <= limit) return text;
-    return words.slice(0, limit).join(" ") + "...";
-  }
 
   return (
     <MainLayoutContainer openSidebar={openSidebar}>
@@ -95,17 +89,8 @@ function MyPetsMainLayout() {
       </SecondContainer>
       <ThirdContainer>
         {pets.map((pet) => {
-          const petHealthlog = Healthlog.filter((log) => log.pet_id === pet.id);
-          const petAppointment = Appointment.filter(
-            (appt) => appt.pet_id === pet.id
-          );
-          const petNote = Note.filter((note) => note.pet_id === pet.id);
-          const recentHealthlog =
-            petHealthlog.length > 0 ? petHealthlog[0] : null;
-          const recentAppointment =
-            petAppointment.length > 0 ? petAppointment[0] : null;
-          const recentNote = petNote.length > 0 ? petNote[0] : null;
           const avatar_url = pet.avatar_url;
+          console.log(pet);
           return (
             <Card key={pet.id}>
               <CardSection1>
@@ -118,70 +103,28 @@ function MyPetsMainLayout() {
                     <PetChar>{pet.name.charAt(0)}</PetChar>
                   </PetImg>
                 )}
+              </CardSection1>
+              <CardSection2>
                 <PetInfo>
                   <PetName>
                     <Heading as="h11">{pet.name}</Heading>
                   </PetName>
+                  <Breed>
+                    <PawPrint size={20} color="#ed4a2f" />
+                    {pet.breed}
+                  </Breed>
+                  <Age>
+                    <PartyPopper size={20} color="#ed4a2f" />
+                    {pet.age}
+                  </Age>
+                  <Gender>
+                    <UserRound size={20} color="#ed4a2f" /> {pet.gender}
+                  </Gender>
+                  <WeightInfo>
+                    <Weight size={20} color="#ed4a2f" />
+                    {`${pet.weight} ${pet.unit}`}
+                  </WeightInfo>
                 </PetInfo>
-              </CardSection1>
-              <CardSection2>
-                <RecentActivity>
-                  <Heading as="h12">
-                    <Activity color="red" size={20} />
-                    Recent Activity
-                  </Heading>
-                  {recentHealthlog ? (
-                    <RecentHealthLogDiv>
-                      <RecentHealthLogTitle>
-                        <Icon>
-                          <Heart size={17} color="#c13e62" />
-                        </Icon>
-                        {truncateTitle(recentHealthlog?.title)}
-                      </RecentHealthLogTitle>
-                      <RecentHealthLogDate>
-                        {recentHealthlog?.date &&
-                          format(recentHealthlog.date, "MMMM, d")}
-                      </RecentHealthLogDate>
-                    </RecentHealthLogDiv>
-                  ) : (
-                    ""
-                  )}
-                  {recentAppointment ? (
-                    <RecentAppointmentDiv>
-                      <RecentAppointmentTitle>
-                        <Icon>
-                          <Calendar size={17} color="#1d4ed8" />
-                        </Icon>
-                        {recentAppointment?.event_title}
-                      </RecentAppointmentTitle>
-                      <RecentAppointmentDate>
-                        {recentAppointment?.date &&
-                          format(recentAppointment.date, "MMMM, d")}
-                      </RecentAppointmentDate>
-                    </RecentAppointmentDiv>
-                  ) : (
-                    ""
-                  )}
-                  {recentNote ? (
-                    <RecentNotesDiv>
-                      <RecentNotesTitle>
-                        <Icon>
-                          <NotebookPen size={17} color="#fdc700" />
-                        </Icon>
-                        {truncateTitle(recentNote?.title)}
-                      </RecentNotesTitle>
-                      <RecentNotesDate>
-                        {recentNote.created_at &&
-                          format(recentNote.created_at, "MMMM, d")}
-                      </RecentNotesDate>
-                    </RecentNotesDiv>
-                  ) : (
-                    ""
-                  )}
-                  {!recentAppointment && !recentHealthlog && !recentNote && (
-                    <GreyedText>No Recent Activity</GreyedText>
-                  )}
-                </RecentActivity>
               </CardSection2>
               {/* 
               
@@ -290,7 +233,6 @@ const Card = styled.div`
   position: relative;
   margin-top: 25px;
   @media (max-width: 767px) {
-    flex-direction: column;
     padding: 1rem;
     gap: 0.5rem;
   }
@@ -317,7 +259,7 @@ const AddPetButton = styled.button`
 const CardSection1 = styled.div`
   flex: 1;
   @media (max-width: 767px) {
-    width: 100%;
+    width: 50%;
     display: flex;
     gap: 0.6rem;
   }
@@ -337,7 +279,6 @@ const PetImg = styled.div`
     height: 120px;
     width: 120px;
     font-size: 2.3rem;
-    margin-top: 20px;
   }
 `;
 const PetImage = styled.img`
@@ -353,11 +294,11 @@ const PetImgDiv = styled.div`
   }
 `;
 const PetInfo = styled.div`
-  margin-top: 5px;
-  margin-left: 20px;
   width: 90%;
+  margin-top: -30px;
   @media (max-width: 767px) {
-    margin: 0;
+    margin-top: -50px;
+    margin-left: 10px;
   }
 `;
 const PetChar = styled.div`
@@ -403,17 +344,15 @@ const WeightInfo = styled.p`
   gap: 0.4rem;
 `;
 const CardSection2 = styled.div`
-  height: 315px;
   flex: 3;
+  height: fit-content;
   @media (max-width: 767px) {
-    width: 100%;
-    margin-top: 10px;
+    width: 50%;
   }
 `;
 const PetName = styled.div`
   margin-top: 20px;
   width: fit-content;
-  margin-left: 20px;
   width: 90%;
   word-break: break-all;
   @media (max-width: 767px) {

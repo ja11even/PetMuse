@@ -66,6 +66,12 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
       reset(emptyDefaultValues);
     }
   }, [isOpen, reset, currentDefaultValues]);
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   function onSubmit(data) {
     const notesData = {
@@ -141,7 +147,12 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
-  inset: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  touch-action: none;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
   @keyframes fadeIn {

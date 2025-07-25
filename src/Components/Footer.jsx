@@ -126,6 +126,7 @@ const BoxText = styled.p`
   }
   @media (max-width: 767px) {
     width: 310px;
+    font-size: 0.9rem;
   }
 `;
 const LogoDiv = styled.div`
@@ -156,6 +157,9 @@ const BoxTextOneContact = styled.p`
 `;
 const BoxTextTwo = styled.p`
   font-size: 1rem;
+  @media (max-width: 767px) {
+    font-size: 0.9rem;
+  }
 `;
 const BoxMenu = styled.ul`
   list-style: none;
@@ -175,6 +179,7 @@ const BoxItem = styled.li`
   @media (max-width: 767px) {
     width: 200px;
     margin-top: 2px;
+    font-size: 0.9rem;
   }
 `;
 const StyledLink = styled(NavLink)`

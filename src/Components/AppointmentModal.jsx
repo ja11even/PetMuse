@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { useFetchPets } from "../Hooks/usePets";
 import {
   useAddAppointments,
   useDeleteAppointments,
@@ -9,7 +8,7 @@ import {
 import { Controller } from "react-hook-form";
 import { useEffect, useRef } from "react";
 import { useUser } from "../Hooks/useUser";
-import { Calendar, X } from "lucide-react";
+import { Calendar, Trash, Trash2, X } from "lucide-react";
 import TimePicker from "./TimePicker";
 import SpinnerMini from "./SpinnerMini";
 import Select from "react-select";
@@ -38,14 +37,13 @@ function AppointmentModal({
     control,
     reset,
   } = useForm({ defaultValues: emptyDefaultValues });
-  const { pets } = useFetchPets();
   const { user } = useUser();
   const addAppointment = useAddAppointments();
   const updateAppointment = useUpdateAppointments();
   const deleteAppointment = useDeleteAppointments();
   const selectedType = watch("event_type");
   const modalRef = useRef();
-  const { selectedPet, setSelectedPet } = useSelectedPet();
+  const { selectedPet } = useSelectedPet();
   const onCloseAndReset = () => {
     reset(emptyDefaultValues);
     onClose();
@@ -82,6 +80,12 @@ function AppointmentModal({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose, reset]);
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
 
   function onSubmit(data) {
     const appointmentData = {
@@ -278,17 +282,30 @@ function AppointmentModal({
           <Buttons>
             <ButtonContainer1>
               {existingAppointment && (
-                <DeleteButton
-                  type="button"
-                  onClick={handleDelete}
-                  disabled={deleteAppointment.isPending}
-                >
-                  {deleteAppointment.isPending ? (
-                    <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
-                  ) : (
-                    "Delete"
-                  )}
-                </DeleteButton>
+                <>
+                  <MobileDeleteButton
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={deleteAppointment.isPending}
+                  >
+                    <Trash2 />
+                  </MobileDeleteButton>
+                  <DeleteButton
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={deleteAppointment.isPending}
+                  >
+                    {deleteAppointment.isPending ? (
+                      <SpinnerMini
+                        width="1.6rem"
+                        height="1.6rem"
+                        color="white"
+                      />
+                    ) : (
+                      "Delete"
+                    )}
+                  </DeleteButton>
+                </>
               )}
             </ButtonContainer1>
             <ButtonContainer2>
@@ -319,12 +336,17 @@ function AppointmentModal({
 const Overlay = styled.div`
   animation: fadeIn 0.3s ease-in-out;
   position: fixed;
-  inset: 0;
   background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  touch-action: none;
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -345,7 +367,8 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  overflow-y: scroll;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -353,7 +376,7 @@ const ModalContainer = styled.div`
   scrollbar-width: none;
   @media (max-width: 767px) {
     padding: 1.2rem;
-    touch-action: none;
+    padding-bottom: 2rem;
   }
 `;
 const HeaderContainer = styled.div`
@@ -397,7 +420,8 @@ const LocationTimeContainer = styled.div`
   align-items: center;
   gap: 1.5rem;
   @media (max-width: 767px) {
-    gap: 0.5rem;
+    gap: 0rem;
+    flex-direction: column;
   }
 `;
 const PetContainer = styled.div`
@@ -421,15 +445,24 @@ const LocationContainer = styled.div`
   flex-direction: column;
   gap: 0.3rem;
   width: 50%;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
 `;
 const TimeContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
   width: 50%;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
 `;
 
-const ButtonContainer1 = styled.div``;
+const ButtonContainer1 = styled.div`
+  display: flex;
+  align-items: center;
+`;
 const ButtonContainer2 = styled.div`
   display: flex;
   gap: 0.5rem;
@@ -437,6 +470,8 @@ const ButtonContainer2 = styled.div`
 
 const Title = styled.h2`
   color: #ed4a2f;
+  font-family: "MyFont";
+  font-weight: 500;
 `;
 const Form = styled.form``;
 const Label = styled.label`
@@ -508,6 +543,20 @@ const DeleteButton = styled.button`
   font-family: inherit;
   &:hover {
     cursor: pointer;
+  }
+  @media (max-width: 767px) {
+    display: none;
+  }
+`;
+const MobileDeleteButton = styled.button`
+  display: none;
+  @media (max-width: 767px) {
+    display: block;
+    color: #ed4a2f;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
   }
 `;
 const CancelButton = styled.button`

@@ -134,8 +134,8 @@ const StyledText = styled.p`
     font-size: 1.3rem;
   }
   @media (max-width: 767px) {
-    width: 330px;
-    font-size: 1.25rem;
+    width: 320px;
+    font-size: 1.15rem;
   }
 `;
 const RightContainer = styled.div`
