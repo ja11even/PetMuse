@@ -11,6 +11,27 @@ import { format } from "date-fns";
 import SpinnerMini from "./SpinnerMini";
 import { useSelectedPet } from "./useSelectedPet";
 
+const toggleBodyScrollLock = (shouldLock) => {
+  const body = document.body;
+  const currentScrollY = window.scrollY;
+
+  if (shouldLock) {
+    body.setAttribute("data-scroll-y", currentScrollY.toString());
+    body.style.position = "fixed";
+    body.style.top = `-${currentScrollY}px`;
+    body.style.width = "100%";
+  } else {
+    const storedScrollY = body.getAttribute("data-scroll-y");
+
+    body.style.position = "";
+    body.style.top = "";
+    body.style.width = "";
+    body.style.overflowY = "";
+    window.scrollTo(0, parseInt(storedScrollY || "0", 10));
+    body.removeAttribute("data-scroll-y");
+  }
+};
+
 const emptyDefaultValues = {
   log_type: null,
   title: "",
@@ -74,6 +95,17 @@ function HealthlogsModal({ isOpen, onClose, mode, initialData }) {
   }, [reset, onClose]);
 
   useEffect(() => {
+    if (isOpen) {
+      toggleBodyScrollLock(true);
+    } else {
+      toggleBodyScrollLock(false);
+    }
+    return () => {
+      toggleBodyScrollLock(false);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         onCloseAndReset();
@@ -100,13 +132,6 @@ function HealthlogsModal({ isOpen, onClose, mode, initialData }) {
       reset(emptyDefaultValues);
     }
   }, [isOpen, reset, currentDefaultValues]);
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
 
   function convert24hrs(timeStr) {
     const [time, modifier] = timeStr.split(" ");
@@ -520,12 +545,10 @@ const Overlay = styled.div`
   position: fixed;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   top: 0;
   left: 0;
-  overflow: hidden;
-  touch-action: none;
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -555,7 +578,8 @@ const ModalContainer = styled.div`
   -ms-overflow-style: none;
   @media (max-width: 767px) {
     padding: 1.2rem;
-    touch-action: none;
+    height: auto;
+    max-height: 90vh;
     padding-bottom: 2rem;
   }
 `;

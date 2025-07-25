@@ -6,7 +6,7 @@ import { useUser } from "../Hooks/useUser";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import SpinnerMini from "./SpinnerMini";
 import { useSelectedPet } from "./useSelectedPet";
-
+import { RemoveScroll } from "react-remove-scroll";
 const emptyDefaultValues = {
   title: "",
   notes: "",
@@ -66,12 +66,6 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
       reset(emptyDefaultValues);
     }
   }, [isOpen, reset, currentDefaultValues]);
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
 
   function onSubmit(data) {
     const notesData = {
@@ -91,54 +85,56 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
 
   if (!isOpen) return null;
   return (
-    <Overlay>
-      <ModalContainer ref={modalRef}>
-        <FirstContainer>
-          <First1>New Note</First1>
-          <CloseButton onClick={onCloseAndReset}>
-            <X size={20} color="red" />
-          </CloseButton>
-        </FirstContainer>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <InputDiv>
-            <Input
-              placeholder="Note title..."
-              {...register("title", { required: true })}
-            />
-            {errors.title && <Error>This field is required</Error>}
-          </InputDiv>
+    <RemoveScroll enabled={isOpen}>
+      <Overlay>
+        <ModalContainer ref={modalRef}>
+          <FirstContainer>
+            <First1>New Note</First1>
+            <CloseButton onClick={onCloseAndReset}>
+              <X size={20} color="red" />
+            </CloseButton>
+          </FirstContainer>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <InputDiv>
+              <Input
+                placeholder="Note title..."
+                {...register("title", { required: true })}
+              />
+              {errors.title && <Error>This field is required</Error>}
+            </InputDiv>
 
-          <NotesArea
-            placeholder="Write your notes here..."
-            {...register("notes", { required: true })}
-          />
-          <Buttons>
-            <ButtonContainer1></ButtonContainer1>
-            <ButtonContainer2>
-              <CancelButton
-                type="button"
-                onClick={onCloseAndReset}
-                disabled={addNotes.isPending || updateNotes.isPending}
-              >
-                Cancel
-              </CancelButton>
-              <SaveButton
-                type="submit"
-                disabled={addNotes.isPending || updateNotes.isPending}
-              >
-                {addNotes.isPending || updateNotes.isPending ? (
-                  <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
-                ) : mode === "add" ? (
-                  "Add"
-                ) : (
-                  "Update"
-                )}
-              </SaveButton>
-            </ButtonContainer2>
-          </Buttons>
-        </Form>
-      </ModalContainer>
-    </Overlay>
+            <NotesArea
+              placeholder="Write your notes here..."
+              {...register("notes", { required: true })}
+            />
+            <Buttons>
+              <ButtonContainer1></ButtonContainer1>
+              <ButtonContainer2>
+                <CancelButton
+                  type="button"
+                  onClick={onCloseAndReset}
+                  disabled={addNotes.isPending || updateNotes.isPending}
+                >
+                  Cancel
+                </CancelButton>
+                <SaveButton
+                  type="submit"
+                  disabled={addNotes.isPending || updateNotes.isPending}
+                >
+                  {addNotes.isPending || updateNotes.isPending ? (
+                    <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
+                  ) : mode === "add" ? (
+                    "Add"
+                  ) : (
+                    "Update"
+                  )}
+                </SaveButton>
+              </ButtonContainer2>
+            </Buttons>
+          </Form>
+        </ModalContainer>
+      </Overlay>
+    </RemoveScroll>
   );
 }
 const Overlay = styled.div`
@@ -147,12 +143,7 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  touch-action: none;
+  inset: 0;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
   @keyframes fadeIn {
@@ -168,20 +159,23 @@ const ModalContainer = styled.div`
   background-color: white;
   border-radius: 10px;
   width: 650px;
-  min-height: 480px;
-  max-height: 490px;
   max-width: 90%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding-bottom: 1.7rem;
+  height: auto;
+  max-height: 90vh;
+  overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
   }
   scrollbar-width: none;
   -ms-overflow-style: none;
   @media (max-width: 767px) {
-    touch-action: none;
+    padding: 1.2rem;
+    max-width: 95%;
+    max-height: 95vh;
   }
 `;
 const Form = styled.form`
@@ -216,7 +210,6 @@ const NotesArea = styled.textarea`
   font-family: inherit;
   font-size: 1rem;
   resize: none;
-  overflow-y: scroll;
   line-height: 1.4;
   margin-top: 23px;
   &::-webkit-scrollbar {

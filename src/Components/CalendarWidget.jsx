@@ -192,50 +192,30 @@ const StyledCalendar = styled(Calendar)`
     background-color: #dbeafe !important;
     color: #1d4ed8 !important;
     border: 1px solid #dbeafe;
-    @media (max-width: 767px) {
-      background-color: transparent !important;
-      border: none !important;
-    }
   }
 
   .tile-grooming {
     background-color: #fdecd5 !important;
     color: #c24225 !important;
     border: 1px solid #fdecd5;
-    @media (max-width: 767px) {
-      background-color: transparent !important;
-      border: none !important;
-    }
   }
 
   .tile-medication {
     background-color: #dcfbe7 !important;
     color: #3a803e !important;
     border: 1px solid #dcfbe7;
-    @media (max-width: 767px) {
-      background-color: transparent !important;
-      border: none !important;
-    }
   }
 
   .tile-training {
     background-color: #f3e8fe !important;
     color: #8044ce !important;
     border: 1px solid #f3e8fe;
-    @media (max-width: 767px) {
-      background-color: transparent !important;
-      border: none !important;
-    }
   }
 
   .tile-other {
     background-color: #fbe7f3 !important;
     color: #c13e62 !important;
     border: 1px solid #fbe7f3;
-    @media (max-width: 767px) {
-      background-color: transparent !important;
-      border: none !important;
-    }
   }
 `;
 export default CalendarWidget;

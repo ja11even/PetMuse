@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { useFetchAllHealthlogs } from "../Hooks/useHealthlogs";
 import { useFetchAllAppointments } from "../Hooks/useAppointments";
-import { format } from "date-fns";
 import { useFetchAllNotes } from "../Hooks/useNotes";
 import Loader from "./Loader";
 
@@ -258,6 +257,10 @@ const AddPetButton = styled.button`
 `;
 const CardSection1 = styled.div`
   flex: 1;
+  height: 200px;
+  display: flex;
+  align-items: center;
+
   @media (max-width: 767px) {
     width: 50%;
     display: flex;
@@ -274,10 +277,10 @@ const PetImg = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-
   @media (max-width: 767px) {
-    height: 120px;
-    width: 120px;
+    height: 115px;
+    width: 115px;
+    border-radius: 50%;
     font-size: 2.3rem;
   }
 `;
@@ -285,6 +288,10 @@ const PetImage = styled.img`
   height: 150px;
   width: 150px;
   border-radius: 50%;
+  @media (max-width: 767px) {
+    height: 115px;
+    width: 115px;
+  }
 `;
 const PetImgDiv = styled.div`
   @media (max-width: 767px) {

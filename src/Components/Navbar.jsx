@@ -127,6 +127,7 @@ function Navbar() {
           </ButtonLink>
         </Buttons>
       </NavContainer>
+      <ScrollProgressBar />
     </Nav>
   );
 }

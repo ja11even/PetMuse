@@ -10,8 +10,6 @@ body{
     background-color:#FCE9D0 ;
     line-height: 1.6;
     font-family: 'MyFont', sans-serif;
-    overflow-x: hidden;
-   
 }
 .react-calendar{
     font-family: "MyFont", sans-serif;

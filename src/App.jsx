@@ -20,6 +20,7 @@ import Contact from "./Pages/Contact";
 import ScrollToTop from "./Components/ScrollToTop";
 import { lazy, Suspense } from "react";
 import FullPageLoader from "./Components/FullPageLoader";
+import { useAuthChangeHandler } from "./Components/useAuthChangeHandler";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +50,7 @@ const Profile = lazy(() => import("./Pages/Profile"));
 const LogDetailPage = lazy(() => import("./Pages/LogDetailPage"));
 const NoteDetailPage = lazy(() => import("./Pages/NoteDetailPage"));
 function App() {
+  useAuthChangeHandler();
   return (
     <QueryClientProvider client={queryClient}>
       <FontStyles />
