@@ -5,7 +5,7 @@ import {
   fetchAllHealthlogs,
   fetchHealthlogs,
   updateHealthLogs,
-} from "../Services/apiHealthLogs";
+} from "../Services/apiHealthlogs";
 import { useUser } from "./useUser";
 import toast from "react-hot-toast";
 import { useSelectedPet } from "../Components/useSelectedPet";
