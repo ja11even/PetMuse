@@ -142,6 +142,9 @@ const Nav = styled.nav`
   transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
   background-color: ${({ scroll }) => (scroll ? "rgba(0,0,0,0,0)" : "#ffffff")};
   backdrop-filter: ${({ scroll }) => (scroll ? "blur(6px)" : "none")};
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
   @media (max-width: 767px) {
     width: 100%;
   }
@@ -153,6 +156,9 @@ const NavContainer = styled.div`
   margin: 0 auto;
   justify-content: space-between;
   color: #ed4a2f;
+  @media (max-width: 1024px) {
+    max-width: 95%;
+  }
   @media (max-width: 767px) {
     max-width: 95%;
   }
@@ -161,6 +167,9 @@ const LogoDiv = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  @media (max-width: 1024px) {
+    margin-top: 4px;
+  }
   @media (max-width: 767px) {
     margin-top: 4px;
   }
@@ -173,6 +182,9 @@ const NavMenu = styled.ul`
   gap: 3rem;
   list-style: none;
   margin-left: 50px;
+  @media (max-width: 1024px) {
+    display: none;
+  }
   @media (max-width: 767px) {
     display: none;
   }
@@ -184,6 +196,9 @@ const MobileNavMenu = styled.ul`
   margin-top: 30px;
 `;
 const MobileNavItem = styled.li`
+  @media (max-width: 1024px) {
+    width: 300px;
+  }
   font-size: 1.1rem;
   border-bottom: 1px solid #ed4a2f;
   width: 340px;
@@ -192,6 +207,11 @@ const MobileNavItem = styled.li`
 `;
 const HamburgerDiv = styled.div`
   display: none;
+  @media (max-width: 1024px) {
+    display: block;
+    justify-content: center;
+    margin-top: 7px;
+  }
   @media (max-width: 767px) {
     display: block;
     justify-content: center;
@@ -206,6 +226,9 @@ const NavItem = styled.li`
 const Buttons = styled.div`
   display: flex;
   gap: 0.7rem;
+  @media (max-width: 1024px) {
+    display: none;
+  }
   @media (max-width: 767px) {
     display: none;
   }
@@ -241,6 +264,9 @@ const LogIn = styled.button`
   }
 `;
 const MobileLogIn = styled.button`
+  @media (max-width: 1024px) {
+    width: 300px;
+  }
   border: none;
   border: 1px solid #ed4a2f;
   background-color: transparent;
@@ -250,9 +276,12 @@ const MobileLogIn = styled.button`
   border-radius: 5px;
   font-family: inherit;
   color: #ed4a2f;
-  margin-top: 20px;
+  margin-top: 30px;
 `;
 const MobileSignUp = styled.button`
+  @media (max-width: 1024px) {
+    width: 300px;
+  }
   border: none;
   background-color: #ed4a2f;
   padding: 0.9rem;

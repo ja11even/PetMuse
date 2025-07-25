@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { Heading } from "./Heading";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useInView, motion } from "framer-motion";
 
 const faqData = [
   {
@@ -25,18 +26,36 @@ const faqData = [
   },
 ];
 function Faq() {
+  const headerRef = useRef(null);
+  const isheaderRefInView = useInView(headerRef, { once: true });
   const [activeIndex, setActiveIndex] = useState(null);
+  const accordionRef = useRef(null);
+  const isaccordionRefInView = useInView(accordionRef, { once: true });
 
   const toggle = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
   return (
     <FaqContainer>
-      <ContainerOne>
+      <ContainerOne
+        ref={headerRef}
+        initial={{ opacity: 0, y: 30 }}
+        animate={
+          isheaderRefInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+        }
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <Heading as="h2">Frequently Asked Questions</Heading>
         <HeaderText>Everything you need to know about PetMuse</HeaderText>
       </ContainerOne>
-      <AccordionContainer>
+      <AccordionContainer
+        ref={accordionRef}
+        initial={{ opacity: 0, y: 30 }}
+        animate={
+          isaccordionRefInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+        }
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         {faqData.map((item, index) => (
           <AccordionItem key={index}>
             <Question onClick={() => toggle(index)}>
@@ -65,7 +84,7 @@ const FaqContainer = styled.div`
     max-height: 650px;
   }
 `;
-const ContainerOne = styled.div`
+const ContainerOne = styled(motion.div)`
   max-width: 1350px;
   margin: 0 auto;
   display: flex;
@@ -85,7 +104,7 @@ const HeaderText = styled.p`
     font-size: 1.25rem;
   }
 `;
-const AccordionContainer = styled.div`
+const AccordionContainer = styled(motion.div)`
   max-width: 650px;
   margin: 50px auto;
   @media (max-width: 767px) {

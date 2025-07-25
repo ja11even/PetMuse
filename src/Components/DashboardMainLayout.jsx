@@ -183,9 +183,7 @@ function DashboardMainLayout() {
           <FirstContainerDetails>
             <FirstContainerHeader>
               <Heading as="h5">{user?.user_metadata?.firstName},</Heading>
-              <HeaderText>
-                Here's what's happening with {selectedPet?.name}
-              </HeaderText>
+              <HeaderText>Here's the latest</HeaderText>
             </FirstContainerHeader>
             <PetSwitcher>
               {selectedPet && (
@@ -232,9 +230,9 @@ function DashboardMainLayout() {
                         setSwitcher(false);
                       }}
                     >
-                      {avatar_url ? (
+                      {pet.avatar_url ? (
                         <SwitcherPetImg>
-                          <SwitcherPetImage src={avatar_url} />
+                          <SwitcherPetImage src={pet.avatar_url} />
                         </SwitcherPetImg>
                       ) : (
                         <SwitcherPetImg>
@@ -453,8 +451,7 @@ function DashboardMainLayout() {
               {!recentAppointment ||
                 (recentAppointment.length === 0 && (
                   <GreyedText>
-                    Keep track of vet visits, and more. Start by adding your
-                    first appointment.
+                    Start by adding your first appointment.
                   </GreyedText>
                 ))}
             </RecentAppointments>
@@ -522,8 +519,7 @@ function DashboardMainLayout() {
               {!recentHealthlog ||
                 (recentHealthlog.length === 0 && (
                   <GreyedText>
-                    Add logs for medications or checkups. Start by adding your
-                    first health log.
+                    Start by adding your first health log.
                   </GreyedText>
                 ))}
             </HealthLog>
@@ -585,10 +581,7 @@ function DashboardMainLayout() {
               })}
               {!recentNotes ||
                 (recentNotes.length === 0 && (
-                  <GreyedText>
-                    Jot down behaviour, or anything worth remembering. Start
-                    with your first note.
-                  </GreyedText>
+                  <GreyedText>Start with your first note.</GreyedText>
                 ))}
             </Notes>
           </>
@@ -612,12 +605,17 @@ const MainLayoutContainer = styled.div`
   padding-bottom: 2rem;
   position: relative;
   transition: transform 0.3s ease;
+  @media (max-width: 1024px) {
+    width: 100%;
+    transform: ${({ openSidebar }) =>
+      openSidebar ? "translateX(75%)" : "translateX(0)"};
+    padding: 2rem 1rem;
+  }
   @media (max-width: 767px) {
     width: 100%;
     transform: ${({ openSidebar }) =>
       openSidebar ? "translateX(75%)" : "translateX(0)"};
-    padding-top: 2rem;
-    padding: 1.8rem;
+    padding: 2rem 1rem;
   }
 `;
 const FirstContainer = styled.div``;
@@ -638,6 +636,9 @@ const SidebarIcon = styled.div`
   align-items: center;
   justify-content: center;
   display: none;
+  @media (max-width: 1024px) {
+    display: block;
+  }
   @media (max-width: 767px) {
     display: block;
   }

@@ -10,8 +10,25 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Element, scroller } from "react-scroll";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useInView, motion } from "framer-motion";
 function Features() {
+  const box1 = useRef(null);
+  const isbox1InView = useInView(box1, { once: true });
+  const box2 = useRef(null);
+  const isbox2InView = useInView(box2, { once: true });
+  const box3 = useRef(null);
+  const isbox3InView = useInView(box3, { once: true });
+  const box4 = useRef(null);
+  const isbox4InView = useInView(box4, { once: true });
+  const box5 = useRef(null);
+  const isbox5InView = useInView(box5, { once: true });
+  const box6 = useRef(null);
+  const isbox6InView = useInView(box6, { once: true });
+
+  const headerRef = useRef(null);
+  const isheaderRefInView = useInView(headerRef, { once: true });
+
   useEffect(() => {
     const hash = window.location.hash;
     if (hash) {
@@ -25,14 +42,28 @@ function Features() {
   return (
     <Element name="features">
       <FeaturesContainer>
-        <ContainerOne>
+        <ContainerOne
+          ref={headerRef}
+          initial={{ opacity: 0, y: 30 }}
+          animate={
+            isheaderRefInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+          }
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <Heading as="h2">Features Designed For Pet Parents</Heading>
           <HeaderText>
             Everything you need to keep your pets healthy and happy in one place
           </HeaderText>
         </ContainerOne>
         <ContainerTwo>
-          <Box>
+          <Box
+            ref={box1}
+            initial={{ opacity: 0, y: 30 }}
+            animate={
+              isbox1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <IconDiv>
               <UsersRound />
             </IconDiv>
@@ -42,7 +73,14 @@ function Features() {
               care plans.
             </BoxText>
           </Box>
-          <Box>
+          <Box
+            ref={box2}
+            initial={{ opacity: 0, y: 30 }}
+            animate={
+              isbox2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <IconDiv>
               <Calendar />
             </IconDiv>
@@ -52,7 +90,14 @@ function Features() {
               important events.
             </BoxText>
           </Box>
-          <Box>
+          <Box
+            ref={box3}
+            initial={{ opacity: 0, y: 30 }}
+            animate={
+              isbox3InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <IconDiv>
               <Heart />
             </IconDiv>
@@ -62,7 +107,14 @@ function Features() {
               over time.
             </BoxText>
           </Box>
-          <Box>
+          <Box
+            ref={box4}
+            initial={{ opacity: 0, y: 30 }}
+            animate={
+              isbox4InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <IconDiv>
               <NotebookPen />
             </IconDiv>
@@ -72,7 +124,15 @@ function Features() {
               pet directly on the dashboard.
             </BoxText>
           </Box>
-          <Box>
+
+          <Box
+            ref={box5}
+            initial={{ opacity: 0, y: 30 }}
+            animate={
+              isbox5InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <IconDiv>
               <FileText />
             </IconDiv>
@@ -82,7 +142,14 @@ function Features() {
               keep as a backup.
             </BoxText>
           </Box>
-          <Box>
+          <Box
+            ref={box6}
+            initial={{ opacity: 0, y: 30 }}
+            animate={
+              isbox6InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <IconDiv>
               <Bell />
             </IconDiv>
@@ -98,14 +165,18 @@ function Features() {
   );
 }
 
-const FeaturesContainer = styled.div`
+const FeaturesContainer = styled(motion.div)`
   background-color: #ffffff;
   height: 750px;
+
+  @media (max-width: 1024px) {
+    height: 1600px;
+  }
   @media (max-width: 767px) {
     height: 1695px;
   }
 `;
-const ContainerOne = styled.div`
+const ContainerOne = styled(motion.div)`
   max-width: 1350px;
   margin: 0 auto;
   display: flex;
@@ -113,6 +184,7 @@ const ContainerOne = styled.div`
   align-items: center;
   padding-top: 50px;
   line-height: 1.4;
+  overflow: hidden;
   @media (max-width: 767px) {
     text-align: center;
   }
@@ -124,12 +196,19 @@ const HeaderText = styled.p`
     font-size: 1.25rem;
   }
 `;
-const ContainerTwo = styled.div`
+const ContainerTwo = styled(motion.div)`
   display: flex;
   flex-wrap: wrap;
   max-width: 1350px;
   margin: 40px auto;
   gap: 1rem;
+  overflow: hidden;
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-direction: column;
+    margin: 20px auto;
+    gap: 0.5rem;
+  }
   @media (max-width: 767px) {
     display: flex;
     flex-direction: column;
@@ -138,13 +217,21 @@ const ContainerTwo = styled.div`
   }
 `;
 
-const Box = styled.div`
+const Box = styled(motion.div)`
   width: 32.5%;
   height: 220px;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  overflow: hidden;
+  @media (max-width: 1024px) {
+    width: 88%;
+    margin: 0 auto;
+    padding: 0rem;
+    justify-content: center;
+  }
   @media (max-width: 767px) {
     width: 88%;
     margin: 0 auto;
@@ -155,6 +242,10 @@ const Box = styled.div`
 const BoxText = styled.p`
   font-size: 1.1rem;
   text-align: center;
+  @media (max-width: 1024px) {
+    line-height: 1.4;
+    max-width: 400px;
+  }
   @media (max-width: 767px) {
     line-height: 1.4;
     max-width: 330px;

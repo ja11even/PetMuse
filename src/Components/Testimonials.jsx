@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import { Heading } from "./Heading";
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
-import { Quote } from "lucide-react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 const TestimonialData = [
   {
@@ -32,6 +31,8 @@ const TestimonialData = [
   },
 ];
 function Testimonials() {
+  const headerRef = useRef(null);
+  const isheaderRefInView = useInView(headerRef, { once: true });
   const [index, setIndex] = useState(0);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,7 +43,14 @@ function Testimonials() {
   const { avatar, text, name } = TestimonialData[index];
   return (
     <TestimonialContainer>
-      <ContainerOne>
+      <ContainerOne
+        ref={headerRef}
+        initial={{ opacity: 0, y: 30 }}
+        animate={
+          isheaderRefInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+        }
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <Heading as="h2">What Pet Parents Say</Heading>
         <HeaderText>
           Join thousands of happy pet owners using PetMuse
@@ -69,12 +77,12 @@ function Testimonials() {
 const TestimonialContainer = styled.div`
   max-width: 1350px;
   margin: 0 auto;
-  height: 500px;
+  height: 520px;
   @media (max-width: 767px) {
     height: 600px;
   }
 `;
-const ContainerOne = styled.div`
+const ContainerOne = styled(motion.div)`
   display: flex;
   flex-direction: column;
   max-width: 1350px;
@@ -101,6 +109,10 @@ const TestimonialBoxContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 10px;
+  @media (max-width: 767px) {
+    margin-top: 20px;
+  }
 `;
 const TestimonialBox = styled(motion.div)`
   position: absolute;
@@ -109,9 +121,12 @@ const TestimonialBox = styled(motion.div)`
   border-radius: 16px;
   max-width: 500px;
   width: 100%;
-
   text-align: center;
   border-radius: 10px;
+  @media (max-width: 767px) {
+    width: 89%;
+    padding: 1.5rem 1rem;
+  }
 `;
 const Avatar = styled.img`
   width: 60px;

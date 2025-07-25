@@ -1,63 +1,102 @@
 import styled from "styled-components";
 import { Heading } from "./Heading";
 import { Laptop, Smartphone } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import desktop from "/src/assets/desktop2.png";
 import mobile from "/src/assets/mobile.png";
+import { useInView, motion } from "framer-motion";
 
 function Action() {
-  const [showMobile, setShowMobile] = useState(false);
+  const [showDesktop, setShowDesktop] = useState(false);
+
+  const headerRef = useRef(null);
+  const isheaderRefInView = useInView(headerRef, { once: true });
+
+  const buttonRef = useRef(null);
+  const isbuttonRefInView = useInView(buttonRef, { once: true });
+
+  const imageRef = useRef(null);
+  const isimageRefInView = useInView(imageRef, { once: true });
   return (
     <ActionContainer>
       <ContainerOne>
-        <Heading as="h2">PetMuse In Action</Heading>
-        <ContainerOneText>
-          Explore how PetMuse helps you manage your pet's care with ease.
-        </ContainerOneText>
-        <Buttons>
-          <Desktop
-            showMobile={!showMobile}
-            onClick={() => setShowMobile(false)}
-          >
-            <Laptop />
-            Desktop
-          </Desktop>
+        <HeaderDiv
+          ref={headerRef}
+          initial={{ opacity: 0, y: 30 }}
+          animate={
+            isheaderRefInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+          }
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <Heading as="h2">PetMuse In Action</Heading>
+          <ContainerOneText>
+            Explore how PetMuse helps you manage your pet's care with ease.
+          </ContainerOneText>
+        </HeaderDiv>
+        <Buttons
+          ref={buttonRef}
+          initial={{ opacity: 0, y: 30 }}
+          animate={
+            isbuttonRefInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+          }
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <Phone
-            showMobile={showMobile}
+            showDesktop={!showDesktop}
             onClick={() => {
-              setShowMobile(true);
-              console.log("booty");
+              setShowDesktop(false);
             }}
           >
             <Smartphone />
             Mobile
           </Phone>
+          <Desktop
+            showDesktop={showDesktop}
+            onClick={() => setShowDesktop(true)}
+          >
+            <Laptop />
+            Desktop
+          </Desktop>
         </Buttons>
       </ContainerOne>
       <ContainerTwo>
-        {showMobile ? (
-          <PhoneDiv>
-            <Img src={mobile} />
-          </PhoneDiv>
-        ) : (
-          <DesktopDiv>
+        {showDesktop ? (
+          <DesktopDiv
+            ref={imageRef}
+            initial={{ opacity: 0, y: 30 }}
+            animate={
+              isimageRefInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
             <Img src={desktop} />
           </DesktopDiv>
+        ) : (
+          <PhoneDiv
+            ref={imageRef}
+            initial={{ opacity: 0, y: 30 }}
+            animate={
+              isimageRefInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+            }
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <Img src={mobile} />
+          </PhoneDiv>
         )}
       </ContainerTwo>
-      <Briefing>
-        <Heading as="h3">Dashboard Overview</Heading>
-        <BriefText>
-          Get a quick overview of all your pets upcoming appointments and tasks
-        </BriefText>
-      </Briefing>
     </ActionContainer>
   );
 }
 const ActionContainer = styled.div`
-  height: 850px;
+  height: 870px;
   max-width: 1350px;
   margin: 0 auto;
+  @media (max-width: 1024px) {
+    height: 700px;
+  }
+  @media (max-width: 767px) {
+    height: 580px;
+  }
 `;
 const ContainerOne = styled.div`
   max-width: 1350px;
@@ -67,7 +106,6 @@ const ContainerOne = styled.div`
   align-items: center;
   padding-top: 50px;
   line-height: 1.4;
-
   @media (max-width: 767px) {
     max-width: 500px;
     text-align: center;
@@ -87,10 +125,11 @@ const Phone = styled.button`
   align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 5px;
-  color: ${({ showMobile }) => (showMobile ? "#ffffff" : "#ed4a2f")};
-  background-color: ${({ showMobile }) => (showMobile ? "#ed4a2f" : "#ffffff")};
+  color: ${({ showDesktop }) => (showDesktop ? "#ffffff" : "#ed4a2f")};
+  background-color: ${({ showDesktop }) =>
+    showDesktop ? "#ed4a2f" : "#ffffff"};
   &:hover {
     cursor: pointer;
   }
@@ -102,39 +141,47 @@ const Desktop = styled.button`
   align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 5px;
-  color: ${({ showMobile }) => (showMobile ? "#ffffff" : "#ed4a2f")};
-  background-color: ${({ showMobile }) => (showMobile ? "#ed4a2f" : "#ffffff")};
+  color: ${({ showDesktop }) => (showDesktop ? "#ffffff" : "#ed4a2f")};
+  background-color: ${({ showDesktop }) =>
+    showDesktop ? "#ed4a2f" : "#ffffff"};
   &:hover {
     cursor: pointer;
   }
 `;
-const Buttons = styled.div`
+const Buttons = styled(motion.div)`
   display: flex;
   gap: 1rem;
   margin-top: 20px;
   z-index: 500;
 `;
-const ContainerTwo = styled.div`
+const HeaderDiv = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const ContainerTwo = styled(motion.div)`
   text-align: center;
 `;
-const DesktopDiv = styled.div`
+const DesktopDiv = styled(motion.div)`
   text-align: center;
 `;
-const PhoneDiv = styled.div``;
+const PhoneDiv = styled(motion.div)``;
 const Img = styled.img`
   object-fit: contain;
-  height: 600px;
-  margin-top: -50px;
+  height: 650px;
+  margin-top: -60px;
+  @media (max-width: 1024px) {
+    height: 500px;
+    width: 750px;
+    margin-top: -20px;
+  }
   @media (max-width: 767px) {
-    border: 1px solid black;
+    height: 350px;
+    width: 340px;
+    margin-top: -20px;
   }
 `;
-const Briefing = styled.div`
-  text-align: center;
-  line-height: 1.4;
-  margin-top: -40px;
-`;
-const BriefText = styled.p``;
+
 export default Action;

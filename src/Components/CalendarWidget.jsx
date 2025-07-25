@@ -65,6 +65,9 @@ const StyledCalendar = styled(Calendar)`
     &:hover {
       cursor: pointer;
     }
+    @media (max-width: 1024px) {
+      width: 60px !important;
+    }
     @media (max-width: 767px) {
       width: 30px !important;
       margin-bottom: -20px;
@@ -78,10 +81,14 @@ const StyledCalendar = styled(Calendar)`
     display: grid !important;
     grid-template-columns: repeat(7, 150px);
     justify-content: center;
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(7, 100px);
+      margin-right: 35px;
+    }
     @media (max-width: 767px) {
       grid-template-columns: repeat(7, 20px);
-      gap: 23px;
-      margin-right: 108px;
+      gap: 20px;
+      margin-right: 98px;
     }
   }
   .react-calendar__tile--active,

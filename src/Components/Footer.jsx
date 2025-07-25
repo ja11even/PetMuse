@@ -77,12 +77,18 @@ const FooterContainer = styled.div`
   max-width: 1350px;
   margin: 0 auto;
   padding-top: 30px;
+  @media (max-width: 1024px) {
+    max-width: 91%;
+  }
   @media (max-width: 767px) {
     max-width: 91%;
   }
 `;
 const Box = styled.div`
   width: 25%;
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
   @media (max-width: 767px) {
     width: 100%;
   }
@@ -101,6 +107,11 @@ const FooterText = styled.p`
 const BoxContainer = styled.div`
   display: flex;
   gap: 0.5rem;
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
   @media (max-width: 767px) {
     display: flex;
     flex-direction: column;
@@ -110,6 +121,9 @@ const BoxContainer = styled.div`
 const BoxText = styled.p`
   margin-top: 6px;
   font-size: 1rem;
+  @media (max-width: 1024px) {
+    width: 400px;
+  }
   @media (max-width: 767px) {
     width: 310px;
   }

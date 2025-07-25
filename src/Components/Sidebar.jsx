@@ -137,12 +137,20 @@ const SidebarContainer = styled.aside`
   flex: 1;
   display: flex;
   flex-direction: column;
+  @media (max-width: 1024px) {
+    left: ${({ openSidebar }) => (openSidebar ? "0" : "0")};
+    transition: left 0.3s ease;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
   @media (max-width: 767px) {
     left: ${({ openSidebar }) => (openSidebar ? "0" : "0")};
     transition: left 0.3s ease;
     position: fixed;
     top: 0;
-    width: 293px;
+    width: 100%;
     height: 100%;
   }
 `;
@@ -201,6 +209,22 @@ const SidebarItem = styled(NavLink)`
   &.active {
     background-color: #fce9d0;
     color: #ed4a2f;
+  }
+  @media (max-width: 1024px) {
+    &.active {
+      background: transparent;
+    }
+    &:hover {
+      background-color: transparent;
+    }
+  }
+  @media (max-width: 767px) {
+    &.active {
+      background: transparent;
+    }
+    &:hover {
+      background-color: transparent;
+    }
   }
 `;
 const LockedSidebarItem = styled.li`

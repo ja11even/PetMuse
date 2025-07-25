@@ -291,14 +291,20 @@ function Terms() {
 const TermsContainer = styled.div`
   background-color: #ffffff;
   height: 4000px;
+  @media (max-width: 1024px) {
+    height: 4400px;
+  }
   @media (max-width: 767px) {
-    height: 5460px;
+    height: 5900px;
   }
 `;
 const Term = styled.div`
   max-width: 900px;
   margin: 50px auto;
   padding-top: 50px;
+  @media (max-width: 1024px) {
+    max-width: 600px;
+  }
   @media (max-width: 767px) {
     max-width: 88%;
   }
@@ -348,7 +354,7 @@ const Disclaimer = styled.div`
   gap: 1rem;
   margin-top: 10px;
   @media (max-width: 767px) {
-    height: 225px;
+    height: 245px;
   }
 `;
 const DisclaimerDiv = styled.div`
@@ -356,7 +362,7 @@ const DisclaimerDiv = styled.div`
   width: 3px;
   background-color: #ed4a2f;
   @media (max-width: 767px) {
-    height: 225px;
+    height: 245px;
   }
 `;
 const DisclaimerText = styled.p`

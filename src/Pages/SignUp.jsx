@@ -161,6 +161,8 @@ const GoogleButton = styled.button`
   border-radius: 5px;
   width: 100%;
   padding: 0.5rem;
+  text-decoration: none;
+  color: black;
   &:hover {
     cursor: pointer;
     background-color: #fffaf4;
@@ -180,6 +182,8 @@ const DiscordButton = styled.button`
   gap: 0.5rem;
   width: 100%;
   border-radius: 5px;
+  text-decoration: none;
+  color: black;
   &:hover {
     cursor: pointer;
     background-color: #fffaf4;

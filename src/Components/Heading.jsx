@@ -7,10 +7,12 @@ export const Heading = styled.h1`
       font-size: 3rem;
       color: #ed4a2f;
       line-height: 3.7rem;
-      font-weight: bold;
+      font-family: "MyFont";
+      font-weight: 600;
       width: 650px;
       @media (max-width: 767px) {
         width: 330px;
+        font-size: 2.8rem;
       }
     `}
   ${(props) =>
@@ -18,8 +20,10 @@ export const Heading = styled.h1`
     css`
       font-size: 2.5rem;
       color: #ed4a2f;
+      font-family: "MyFont";
+      font-weight: 500;
       @media (max-width: 767px) {
-        font-size: 2.2rem;
+        font-size: 2rem;
         max-width: 350px;
       }
     `}
@@ -28,12 +32,16 @@ export const Heading = styled.h1`
     css`
       font-size: 1.4rem;
       color: #ed4a2f;
+      font-family: "MyFont";
+      font-weight: 500;
     `}
     ${(props) =>
     props.as === "h4" &&
     css`
       font-size: 1.6rem;
       color: #ed4a2f;
+      font-family: "MyFont";
+      font-weight: 500;
       @media (max-width: 767px) {
         font-size: 1.4rem;
       }
@@ -43,18 +51,24 @@ export const Heading = styled.h1`
     css`
       font-size: 1.9rem;
       color: #ed4a2f;
+      font-family: "MyFont";
+      font-weight: 500;
     `}
     ${(props) =>
     props.as === "h6" &&
     css`
       font-size: 1.5rem;
       color: #ed4a2f;
+      font-family: "MyFont";
+      font-weight: 500;
     `}
     ${(props) =>
     props.as === "h7" &&
     css`
       font-size: 1.2rem;
       color: #ed4a2f;
+      font-family: "MyFont";
+      font-weight: 500;
     `}
     ${(props) =>
     props.as === "h8" &&

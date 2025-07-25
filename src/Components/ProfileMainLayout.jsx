@@ -229,12 +229,17 @@ const MainLayoutContainer = styled.div`
   padding-bottom: 2rem;
   position: relative;
   transition: transform 0.3s ease;
+  @media (max-width: 1024px) {
+    width: 100%;
+    transform: ${({ openSidebar }) =>
+      openSidebar ? "translateX(75%)" : "translateX(0)"};
+    padding: 2rem 1rem;
+  }
   @media (max-width: 767px) {
     width: 100%;
     transform: ${({ openSidebar }) =>
       openSidebar ? "translateX(75%)" : "translateX(0)"};
-    padding-top: 2rem;
-    padding: 1.8rem;
+    padding: 2rem 1rem;
   }
 `;
 const SidebarIcon = styled.div`
@@ -245,6 +250,9 @@ const SidebarIcon = styled.div`
   align-items: center;
   justify-content: center;
   display: none;
+  @media (max-width: 1024px) {
+    display: block;
+  }
   @media (max-width: 767px) {
     display: block;
   }
@@ -266,6 +274,9 @@ const FirstContainer = styled.div`
   margin: 0 auto;
   margin-top: 50px;
   transition: 0.3s ease;
+  @media (max-width: 1024px) {
+    width: ${(props) => (props.showaccount ? "100%" : "100%")};
+  }
   @media (max-width: 767px) {
     width: ${(props) => (props.showaccount ? "100%" : "100%")};
   }

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import SignUpVerticalRow from "./SignUpVerticalRow";
-import { SignUp } from "../Hooks/usesignUp";
+import { useSignUp } from "../Hooks/usesignUp";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 import SpinnerMini from "../Components/SpinnerMini";
 
 function SignUpForm() {
-  const signUp = SignUp();
+  const { mutate: signUp, isPending } = useSignUp();
   const { formState, register, handleSubmit, reset } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -116,7 +116,7 @@ function SignUpForm() {
         </CheckboxLabel>
       </CheckboxWrapper>
       <Button disabled={!checked} type="submit">
-        {signUp.isPending ? (
+        {isPending ? (
           <SpinnerMini width="1.7rem" height="1.7rem" color="white" />
         ) : (
           "Create account"

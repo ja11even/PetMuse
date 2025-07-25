@@ -41,12 +41,17 @@ const MainLayoutContainer = styled.div`
   padding-top: 2.5rem;
   padding-bottom: 2rem;
   transition: transform 0.3s ease;
+  @media (max-width: 1024px) {
+    width: 100%;
+    transform: ${({ openSidebar }) =>
+      openSidebar ? "translateX(75%)" : "translateX(0)"};
+    padding: 2rem 1rem;
+  }
   @media (max-width: 767px) {
     width: 100%;
     transform: ${({ openSidebar }) =>
       openSidebar ? "translateX(75%)" : "translateX(0)"};
-    padding-top: 2rem;
-    padding: 1.8rem;
+    padding: 2rem 1rem;
   }
 `;
 const SidebarIcon = styled.div`
@@ -57,6 +62,9 @@ const SidebarIcon = styled.div`
   align-items: center;
   justify-content: center;
   display: none;
+  @media (max-width: 1024px) {
+    display: block;
+  }
   @media (max-width: 767px) {
     display: block;
   }

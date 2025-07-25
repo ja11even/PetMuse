@@ -293,14 +293,20 @@ function Privacy() {
 const TermsContainer = styled.div`
   background-color: #ffffff;
   height: 3483px;
+  @media (max-width: 1024px) {
+    height: 3650px;
+  }
   @media (max-width: 767px) {
-    height: 4280px;
+    height: 4980px;
   }
 `;
 const Term = styled.div`
   max-width: 900px;
   margin: 50px auto;
   padding-top: 50px;
+  @media (max-width: 1024px) {
+    max-width: 600px;
+  }
   @media (max-width: 767px) {
     max-width: 88%;
   }
@@ -316,7 +322,6 @@ const BoxTextOne = styled.p`
 const BoxText = styled.p`
   font-size: 1.1rem;
   margin-top: 10px;
-
   @media (max-width: 767px) {
     width: 100%;
   }
