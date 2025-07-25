@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useLogIn } from "../Hooks/uselogIn";
+import { useLogIn } from "../Hooks/useLogIn";
 import LogInVerticalForm from "./LogInVerticalForm";
 import { Link } from "react-router-dom";
 import SpinnerMini from "../Components/SpinnerMini";
@@ -10,7 +10,7 @@ function LogInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { mutate: logIn, isPending } = useLogIn();
+  const logIn = useLogIn();
   const inputRef = useRef(null);
   useEffect(() => {
     inputRef.current?.focus();
@@ -27,7 +27,7 @@ function LogInForm() {
           ref={inputRef}
           type="email"
           id="email"
-          disabled={isPending}
+          disabled={logIn.isPending}
           value={email}
           autoComplete="username"
           onChange={(e) => setEmail(e.target.value)}
@@ -48,7 +48,7 @@ function LogInForm() {
             value={password}
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
-            disabled={isPending}
+            disabled={logIn.isPending}
           />
           <VisibilityButton
             type="button"
@@ -62,8 +62,8 @@ function LogInForm() {
           </VisibilityButton>
         </InputWrapper>
       </LogInVerticalForm>
-      <Button disabled={isPending} type="submit">
-        {isPending ? (
+      <Button disabled={logIn.isPending} type="submit">
+        {logIn.isPending ? (
           <SpinnerMini width="1.7rem" height="1.7rem" color="white" />
         ) : (
           "Log In"

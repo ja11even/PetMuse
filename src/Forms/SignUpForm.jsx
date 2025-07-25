@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import SignUpVerticalRow from "./SignUpVerticalRow";
-import { useSignUp } from "../Hooks/usesignUp";
+import { useSignUp } from "../Hooks/useSignUp";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -8,7 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 import SpinnerMini from "../Components/SpinnerMini";
 
 function SignUpForm() {
-  const { mutate: signUp, isPending } = useSignUp();
+  const signUp = useSignUp();
   const { formState, register, handleSubmit, reset } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -36,7 +36,7 @@ function SignUpForm() {
             type="text"
             id="firstName"
             placeholder="First name"
-            disabled={isPending}
+            disabled={signUp.isPending}
             {...register("firstName", { required: "First  name is required " })}
           />
         </SignUpVerticalRow>
@@ -45,7 +45,7 @@ function SignUpForm() {
             type="text"
             id="lastName"
             placeholder="Last name"
-            disabled={isPending}
+            disabled={signUp.isPending}
             {...register("lastName", { required: "Last name is required" })}
           />
         </SignUpVerticalRow>
@@ -55,7 +55,7 @@ function SignUpForm() {
           type="email"
           id="email"
           placeholder="you@example.com"
-          disabled={isPending}
+          disabled={signUp.isPending}
           {...register(
             "email",
             { required: "Email address is required" },
@@ -74,7 +74,7 @@ function SignUpForm() {
             type={showPassword ? "text" : "password"}
             id="password"
             placeholder="Create a strong password"
-            disabled={isPending}
+            disabled={signUp.isPending}
             {...register("password", {
               required: "Password is required",
               minLength: {
@@ -116,7 +116,7 @@ function SignUpForm() {
         </CheckboxLabel>
       </CheckboxWrapper>
       <Button disabled={!checked} type="submit">
-        {isPending ? (
+        {signUp.isPending ? (
           <SpinnerMini width="1.7rem" height="1.7rem" color="white" />
         ) : (
           "Create account"
