@@ -14,6 +14,8 @@ const NotesContainer = styled.div`
   display: flex;
   height: 100vh;
   background-color: #ffffff;
-  overflow: hidden;
+  @media (max-width: 767px) {
+    flex-direction: row;
+  }
 `;
 export default Notes;

@@ -97,7 +97,7 @@ export const Heading = styled.h1`
     ${(props) =>
     props.as === "h11" &&
     css`
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       color: black;
       font-family: "MyFont";
       font-weight: 500;

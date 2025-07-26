@@ -158,7 +158,8 @@ const Overlay = styled.div`
   position: fixed;
   inset: 0;
   top: 0;
-
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
   @keyframes fadeIn {
@@ -174,13 +175,10 @@ const ModalContainer = styled.div`
   background-color: white;
   border-radius: 10px;
   width: 650px;
-  max-width: 90%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-bottom: 1.7rem;
-  height: auto;
-  max-height: 90vh;
+  padding-bottom: 0.5rem;
   overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
@@ -188,9 +186,7 @@ const ModalContainer = styled.div`
   scrollbar-width: none;
   -ms-overflow-style: none;
   @media (max-width: 767px) {
-    padding: 1.2rem;
-    max-width: 95%;
-    max-height: 95vh;
+    max-width: 92%;
   }
 `;
 const Form = styled.form`

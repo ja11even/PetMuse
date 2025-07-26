@@ -16,11 +16,10 @@ function Dashboard() {
 
 const DashboardContainer = styled.div`
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #ffffff;
   @media (max-width: 767px) {
     flex-direction: row;
-    overflow-x: hidden;
   }
 `;
 export default Dashboard;

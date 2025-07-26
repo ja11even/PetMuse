@@ -13,7 +13,9 @@ import TimePicker from "./TimePicker";
 import SpinnerMini from "./SpinnerMini";
 import Select from "react-select";
 import { useSelectedPet } from "./useSelectedPet";
-
+import { RemoveScroll } from "react-remove-scroll";
+import DateInput from "./DateInput";
+import { format } from "date-fns";
 const emptyDefaultValues = {
   event_title: "",
   event_type: null,
@@ -21,6 +23,8 @@ const emptyDefaultValues = {
   description: "",
   location: "",
   veterinarian: "",
+  reminder_date: null,
+  reminder_time: "",
 };
 function AppointmentModal({
   isOpen,
@@ -57,6 +61,8 @@ function AppointmentModal({
       setValue("description", existingAppointment.description);
       setValue("location", existingAppointment.location);
       setValue("veterinarian", existingAppointment.veterinarian);
+      setValue("reminder_time", existingAppointment.reminder_time);
+      setValue("reminder_date", existingAppointment.reminder_date);
     } else {
       reset();
     }
@@ -80,19 +86,47 @@ function AppointmentModal({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose, reset]);
+
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    if (isOpen) {
+      window.scrollTo({
+        top: 0,
+        behavior: "instant",
+      });
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
     return () => {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+  function convert24hrs(timeStr) {
+    const [time, modifier] = timeStr.split(" ");
+    let [hours, minutes] = time.split(":");
 
+    hours = parseInt(hours, 10);
+
+    if (modifier === "PM" && hours !== 12) {
+      hours += 12;
+    }
+    if (modifier === "AM" && hours === 12) {
+      hours = 0;
+    }
+    return `${String(hours).padStart(2, "0")}:${minutes}`;
+  }
   function onSubmit(data) {
+    const hrs = convert24hrs(data.reminder_time);
+    const dateStr = format(data.reminder_date, "yyyy-MM-dd");
     const appointmentData = {
       ...data,
       date: selectedDate,
       user_id: user?.id,
       pet_id: selectedPet?.id,
+      reminder_at:
+        data.reminder_date && data.reminder_time
+          ? new Date(`${dateStr}T${hrs}`).toISOString()
+          : null,
     };
     if (existingAppointment) {
       updateAppointment.mutate(
@@ -177,160 +211,189 @@ function AppointmentModal({
   };
 
   return (
-    <Overlay>
-      <ModalContainer ref={modalRef}>
-        <HeaderContainer>
-          <HeaderContainer1>
-            <HeaderTitleContainer>
-              <Title>{existingAppointment ? "Edit" : "Add"} Appointment</Title>
-            </HeaderTitleContainer>
-            <SubHeader>
-              {existingAppointment ? "Edit a" : "Create as"} calendar event for
-              your pet
-            </SubHeader>
-          </HeaderContainer1>
-          <HeaderContainer2>
-            <CloseButton onClick={onCloseAndReset}>
-              <X size={20} color="red" />
-            </CloseButton>
-          </HeaderContainer2>
-        </HeaderContainer>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <EventsContainer>
-            <EventTitleContainer>
-              <Label>Event Title</Label>
-              <Input
-                placeholder="e.g. Annual Checkup"
-                {...register("event_title", { required: true })}
-              />
-              {errors.event_title && <Error>This field is required</Error>}
-            </EventTitleContainer>
-            <EventTypeContainer>
-              <Label>Event Type</Label>
-              <Controller
-                control={control}
-                name="event_type"
-                rules={{ required: true }}
-                render={({ field }) => {
-                  const eventTypeOptions = [
-                    { value: "vet", label: "Vet Visit" },
-                    { value: "grooming", label: "Grooming" },
-                    { value: "medication", label: "Medication" },
-                    { value: "training", label: "Training" },
-                    { value: "other", label: "Other" },
-                  ];
-                  const selectedEventType = eventTypeOptions.find(
-                    (opt) => opt.value === field.value
-                  );
-                  return (
-                    <Select
-                      {...field}
-                      value={selectedEventType}
-                      onChange={(selectedEventType) =>
-                        field.onChange(
-                          selectedEventType ? selectedEventType.value : null
-                        )
-                      }
-                      options={eventTypeOptions}
-                      styles={customStyle}
-                      placeholder="Select type"
-                      isSearchable={false}
-                    />
-                  );
-                }}
-              />
-              {errors.event_type && <Error>This field is required</Error>}
-            </EventTypeContainer>
-          </EventsContainer>
-          {selectedType === "vet" && (
-            <VetContainer>
-              <Label>Veterinarian</Label>
-              <Input
-                {...register("veterinarian")}
-                placeholder="e.g. Dr Smith"
-              />
-            </VetContainer>
-          )}
-          <LocationTimeContainer>
-            <LocationContainer>
-              <Label>Location</Label>
-              <Input
-                placeholder="e.g. Happy Paws Veterinary Clinic"
-                {...register("location", { required: true })}
-              />
-              {errors.location && <Error>This field is required</Error>}
-            </LocationContainer>
-            <TimeContainer>
-              <Label>Time</Label>
-              <Controller
-                name="time"
-                control={control}
-                render={({ field }) => (
-                  <TimePicker value={field.value} onChange={field.onChange} />
-                )}
-              />
-            </TimeContainer>
-          </LocationTimeContainer>
-          <DescriptionContainer>
-            <Label>Description</Label>
-            <DescriptionText
-              {...register("description")}
-              placeholder="Optional notes..."
-            />
-          </DescriptionContainer>
-
-          <Buttons>
-            <ButtonContainer1>
-              {existingAppointment && (
-                <>
-                  <MobileDeleteButton
-                    type="button"
-                    onClick={handleDelete}
-                    disabled={deleteAppointment.isPending}
-                  >
-                    <Trash2 />
-                  </MobileDeleteButton>
-                  <DeleteButton
-                    type="button"
-                    onClick={handleDelete}
-                    disabled={deleteAppointment.isPending}
-                  >
-                    {deleteAppointment.isPending ? (
-                      <SpinnerMini
-                        width="1.6rem"
-                        height="1.6rem"
-                        color="white"
+    <RemoveScroll enabled={isOpen}>
+      <Overlay>
+        <ModalContainer ref={modalRef}>
+          <HeaderContainer>
+            <HeaderContainer1>
+              <HeaderTitleContainer>
+                <Title>
+                  {existingAppointment ? "Edit" : "Add"} Appointment
+                </Title>
+              </HeaderTitleContainer>
+              <SubHeader>
+                {existingAppointment ? "Edit a" : "Create a"} calendar event for
+                your pet
+              </SubHeader>
+            </HeaderContainer1>
+            <HeaderContainer2>
+              <CloseButton onClick={onCloseAndReset}>
+                <X size={20} color="red" />
+              </CloseButton>
+            </HeaderContainer2>
+          </HeaderContainer>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <EventsContainer>
+              <EventTitleContainer>
+                <Label>Event Title</Label>
+                <Input
+                  placeholder="e.g. Annual Checkup"
+                  {...register("event_title", { required: true })}
+                />
+                {errors.event_title && <Error>This field is required</Error>}
+              </EventTitleContainer>
+              <EventTypeContainer>
+                <Label>Event Type</Label>
+                <Controller
+                  control={control}
+                  name="event_type"
+                  rules={{ required: true }}
+                  render={({ field }) => {
+                    const eventTypeOptions = [
+                      { value: "vet", label: "Vet Visit" },
+                      { value: "grooming", label: "Grooming" },
+                      { value: "medication", label: "Medication" },
+                      { value: "training", label: "Training" },
+                      { value: "other", label: "Other" },
+                    ];
+                    const selectedEventType = eventTypeOptions.find(
+                      (opt) => opt.value === field.value
+                    );
+                    return (
+                      <Select
+                        {...field}
+                        value={selectedEventType}
+                        onChange={(selectedEventType) =>
+                          field.onChange(
+                            selectedEventType ? selectedEventType.value : null
+                          )
+                        }
+                        options={eventTypeOptions}
+                        styles={customStyle}
+                        placeholder="Select type"
+                        isSearchable={false}
                       />
-                    ) : (
-                      "Delete"
-                    )}
-                  </DeleteButton>
-                </>
-              )}
-            </ButtonContainer1>
-            <ButtonContainer2>
-              <CancelButton type="button" onClick={onCloseAndReset}>
-                Cancel
-              </CancelButton>
-              <SaveButton
-                type="submit"
-                disabled={
-                  addAppointment.isPending || updateAppointment.isPending
-                }
-              >
-                {addAppointment.isPending || updateAppointment.isPending ? (
-                  <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
-                ) : existingAppointment ? (
-                  "Update"
-                ) : (
-                  "Save"
+                    );
+                  }}
+                />
+                {errors.event_type && <Error>This field is required</Error>}
+              </EventTypeContainer>
+            </EventsContainer>
+            {selectedType === "vet" && (
+              <VetContainer>
+                <Label>Veterinarian</Label>
+                <Input
+                  {...register("veterinarian")}
+                  placeholder="e.g. Dr Smith"
+                />
+              </VetContainer>
+            )}
+            <LocationTimeContainer>
+              <LocationContainer>
+                <Label>Location</Label>
+                <Input
+                  placeholder="e.g. Happy Paws Veterinary Clinic"
+                  {...register("location", { required: true })}
+                />
+                {errors.location && <Error>This field is required</Error>}
+              </LocationContainer>
+              <TimeContainer>
+                <Label>Time</Label>
+                <Controller
+                  name="time"
+                  control={control}
+                  render={({ field }) => (
+                    <TimePicker value={field.value} onChange={field.onChange} />
+                  )}
+                />
+              </TimeContainer>
+            </LocationTimeContainer>
+            <ReminderContainer>
+              <ReminderDayContainer>
+                <Label>Reminder Date</Label>
+                <Controller
+                  name="reminder_date"
+                  control={control}
+                  render={({ field }) => (
+                    <DateInput
+                      onSelect={field.onChange}
+                      selectedDate={field.value}
+                    />
+                  )}
+                />
+              </ReminderDayContainer>
+              <ReminderTimeContainer>
+                <Label>Reminder Time</Label>
+                <Controller
+                  name="reminder_time"
+                  control={control}
+                  render={({ field }) => (
+                    <TimePicker onChange={field.onChange} value={field.value} />
+                  )}
+                />
+              </ReminderTimeContainer>
+            </ReminderContainer>
+            <DescriptionContainer>
+              <Label>Description</Label>
+              <DescriptionText
+                {...register("description")}
+                placeholder="Optional notes..."
+              />
+            </DescriptionContainer>
+
+            <Buttons>
+              <ButtonContainer1>
+                {existingAppointment && (
+                  <>
+                    <MobileDeleteButton
+                      type="button"
+                      onClick={handleDelete}
+                      disabled={deleteAppointment.isPending}
+                    >
+                      <Trash2 />
+                    </MobileDeleteButton>
+                    <DeleteButton
+                      type="button"
+                      onClick={handleDelete}
+                      disabled={deleteAppointment.isPending}
+                    >
+                      {deleteAppointment.isPending ? (
+                        <SpinnerMini
+                          width="1.6rem"
+                          height="1.6rem"
+                          color="white"
+                        />
+                      ) : (
+                        "Delete"
+                      )}
+                    </DeleteButton>
+                  </>
                 )}
-              </SaveButton>
-            </ButtonContainer2>
-          </Buttons>
-        </Form>
-      </ModalContainer>
-    </Overlay>
+              </ButtonContainer1>
+              <ButtonContainer2>
+                <CancelButton type="button" onClick={onCloseAndReset}>
+                  Cancel
+                </CancelButton>
+                <SaveButton
+                  type="submit"
+                  disabled={
+                    addAppointment.isPending || updateAppointment.isPending
+                  }
+                >
+                  {addAppointment.isPending || updateAppointment.isPending ? (
+                    <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
+                  ) : existingAppointment ? (
+                    "Update"
+                  ) : (
+                    "Save"
+                  )}
+                </SaveButton>
+              </ButtonContainer2>
+            </Buttons>
+          </Form>
+        </ModalContainer>
+      </Overlay>
+    </RemoveScroll>
   );
 }
 const Overlay = styled.div`
@@ -341,12 +404,9 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 999;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   top: 0;
-  left: 0;
-  overflow: hidden;
-  touch-action: none;
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -361,14 +421,13 @@ const ModalContainer = styled.div`
   padding: 1.5rem;
   padding-bottom: 1.7rem;
   width: 650px;
-  height: 480px;
-  max-width: 90%;
   border-radius: 10px;
   display: flex;
+  height: 600px;
   flex-direction: column;
-  gap: 1rem;
   overflow-y: auto;
-  overscroll-behavior: contain;
+  gap: 1rem;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -377,6 +436,7 @@ const ModalContainer = styled.div`
   @media (max-width: 767px) {
     padding: 1.2rem;
     padding-bottom: 2rem;
+    max-width: 92%;
   }
 `;
 const HeaderContainer = styled.div`
@@ -503,6 +563,34 @@ const DescriptionText = styled.textarea`
   -ms-overflow-style: none;
   &:focus {
     outline: none;
+  }
+`;
+const ReminderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  @media (max-width: 767px) {
+    gap: 0rem;
+    flex-direction: column;
+    align-items: normal;
+  }
+`;
+const ReminderDayContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  gap: 0.3rem;
+  @media (max-width: 767px) {
+    width: 100%;
+  }
+`;
+const ReminderTimeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  gap: 0.3rem;
+  @media (max-width: 767px) {
+    width: 100%;
   }
 `;
 const Input = styled.input`

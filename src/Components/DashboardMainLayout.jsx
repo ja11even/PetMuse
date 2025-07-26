@@ -35,7 +35,7 @@ import NotesModal from "./NotesModal";
 import { useSelectedPet } from "./useSelectedPet";
 import Loader from "./Loader";
 import { AnimatePresence, motion } from "framer-motion";
-
+import { RemoveScroll } from "react-remove-scroll";
 const HLDetailsHeader = styled.p`
   color: ${(props) => getColor(props.type)};
   font-size: 1.15rem;
@@ -71,6 +71,7 @@ function DashboardMainLayout() {
   const fetchNotes = useFetchNotes();
   const switcherRef = useRef();
   const toggleButtonRef = useRef();
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (switcherRef.current && !switcherRef.current.contains(event.target)) {
@@ -169,6 +170,69 @@ function DashboardMainLayout() {
       <SidebarIcon onClick={() => setOpenSidebar(!openSidebar)}>
         <PawPrint color="#ed4a2f" fill="#ed4a2f" />
       </SidebarIcon>
+      <PetSwitcherDiv>
+        <FillerDiv></FillerDiv>
+        <PetSwitcher>
+          {selectedPet && (
+            <>
+              {avatar_url ? (
+                <PetImg>
+                  <PetImage src={avatar_url} />
+                </PetImg>
+              ) : (
+                <PetImg>
+                  <PetCharName>{petChar}</PetCharName>
+                </PetImg>
+              )}
+              <PetName>{selectedPet?.name} </PetName>
+            </>
+          )}
+          {pets?.length > 1 && (
+            <ChevronDown
+              size={21}
+              color="#ed4a2f"
+              ref={toggleButtonRef}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSwitcher((prev) => !prev);
+              }}
+            />
+          )}
+        </PetSwitcher>
+      </PetSwitcherDiv>
+      <AnimatePresence>
+        {switcher && (
+          <SwitcherDropdown
+            ref={switcherRef}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            {pets.map((pet) => (
+              <Switcher
+                key={pet.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedPet(pet);
+                  setSwitcher(false);
+                }}
+              >
+                {pet.avatar_url ? (
+                  <SwitcherPetImg>
+                    <SwitcherPetImage src={pet.avatar_url} />
+                  </SwitcherPetImg>
+                ) : (
+                  <SwitcherPetImg>
+                    <PetCharName>{pet.name.charAt(0)}</PetCharName>
+                  </SwitcherPetImg>
+                )}
+                <PetName>{pet.name}</PetName>
+              </Switcher>
+            ))}
+          </SwitcherDropdown>
+        )}
+      </AnimatePresence>
       <FirstContainer>
         {pets.length === 0 ? (
           <FirstContainerHeader>
@@ -185,66 +249,6 @@ function DashboardMainLayout() {
               <Heading as="h5">{user?.user_metadata?.firstName},</Heading>
               <HeaderText>Here's the latest</HeaderText>
             </FirstContainerHeader>
-            <PetSwitcher>
-              {selectedPet && (
-                <>
-                  {avatar_url ? (
-                    <PetImg>
-                      <PetImage src={avatar_url} />
-                    </PetImg>
-                  ) : (
-                    <PetImg>
-                      <PetCharName>{petChar}</PetCharName>
-                    </PetImg>
-                  )}
-                  <PetName>{selectedPet?.name} </PetName>
-                </>
-              )}
-              {pets?.length >= 1 && (
-                <ChevronDown
-                  size={21}
-                  color="#ed4a2f"
-                  ref={toggleButtonRef}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSwitcher((prev) => !prev);
-                  }}
-                />
-              )}
-            </PetSwitcher>
-            <AnimatePresence>
-              {switcher && (
-                <SwitcherDropdown
-                  ref={switcherRef}
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  {pets.map((pet) => (
-                    <Switcher
-                      key={pet.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedPet(pet);
-                        setSwitcher(false);
-                      }}
-                    >
-                      {pet.avatar_url ? (
-                        <SwitcherPetImg>
-                          <SwitcherPetImage src={pet.avatar_url} />
-                        </SwitcherPetImg>
-                      ) : (
-                        <SwitcherPetImg>
-                          <PetCharName>{pet.name.charAt(0)}</PetCharName>
-                        </SwitcherPetImg>
-                      )}
-                      <PetName>{pet.name}</PetName>
-                    </Switcher>
-                  ))}
-                </SwitcherDropdown>
-              )}
-            </AnimatePresence>
           </FirstContainerDetails>
         )}
       </FirstContainer>
@@ -397,6 +401,7 @@ function DashboardMainLayout() {
           </>
         ) : (
           <>
+            <ColorFillerDiv></ColorFillerDiv>
             <RecentAppointments>
               <RecentAppointmentsCard1>
                 <RecentAppointmentsHeader>
@@ -593,7 +598,6 @@ function DashboardMainLayout() {
 
 const MainLayoutContainer = styled.div`
   flex: 4;
-  overflow-y: scroll;
   background-color: #fce9d0;
   &::-webkit-scrollbar {
     display: none;
@@ -603,7 +607,6 @@ const MainLayoutContainer = styled.div`
   padding: 2rem;
   padding-top: 2.5rem;
   padding-bottom: 2rem;
-  position: relative;
   transition: transform 0.3s ease;
   @media (max-width: 1024px) {
     width: 100%;
@@ -666,6 +669,9 @@ const IconDiv = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
+`;
+const ColorFillerDiv = styled.div`
+  border-top: 1px solid #ed4a2f;
 `;
 const PetBoxText = styled.p`
   width: 470px;
@@ -807,12 +813,19 @@ const PetSwitcher = styled.div`
   justify-content: space-between;
   gap: 0.5rem;
   width: auto;
-  border: none;
   padding: 0.4rem 0.8rem;
   background-color: #ffffff;
   border-radius: 10px;
   @media (max-width: 767px) {
   }
+`;
+const PetSwitcherDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const FillerDiv = styled.div`
+  width: 1px;
+  height: 1px;
 `;
 const PetName = styled.p``;
 const PetCharName = styled.p``;
@@ -854,10 +867,15 @@ const SwitcherDropdown = styled(motion.div)`
   flex-direction: column;
   gap: 0.5rem;
   position: absolute;
-  right: 20px;
-  top: 80px;
+  right: 45px;
+  top: 100px;
   padding: 0.5rem 1rem;
   border-radius: 10px;
+  z-index: 1000;
+  @media (max-width: 767px) {
+    right: 30px;
+    top: 130px;
+  }
 `;
 const Switcher = styled.div`
   display: flex;
@@ -1016,6 +1034,7 @@ const RecentAppointments = styled.div`
   padding: 1.5rem;
   border-radius: 10px;
   background-color: white;
+  margin-top: 40px;
   @media (max-width: 767px) {
     padding: 1rem;
   }
@@ -1040,7 +1059,11 @@ const RecentAppointmentsButtons = styled.div`
   display: flex;
   gap: 1rem;
 `;
-const RAHeaderText = styled.p``;
+const RAHeaderText = styled.p`
+  @media (max-width: 767px) {
+    font-size: 0.8rem;
+  }
+`;
 const RAScheduleButton = styled.button`
   border: none;
   display: flex;
@@ -1171,7 +1194,7 @@ const RANotes = styled.p`
   margin-top: 5px;
 `;
 const HealthLog = styled.div`
-  margin-top: 40px;
+  margin-top: 15px;
   padding: 1.5rem;
   border-radius: 10px;
   background-color: white;
@@ -1196,6 +1219,9 @@ const HealthLogHeader = styled.div`
 `;
 const HLHeaderText = styled.p`
   font-size: 1rem;
+  @media (max-width: 767px) {
+    font-size: 0.8rem;
+  }
 `;
 const HealthLogButtons = styled.div`
   display: flex;
@@ -1324,7 +1350,7 @@ const Notes = styled.div`
   padding: 1.5rem;
   border-radius: 10px;
   background-color: white;
-  margin-top: 40px;
+  margin-top: 15px;
   @media (max-width: 767px) {
     padding: 1rem;
   }
@@ -1346,6 +1372,9 @@ const NotesHeader = styled.div`
 `;
 const NotesHeaderText = styled.p`
   font-size: 1rem;
+  @media (max-width: 767px) {
+    font-size: 0.8rem;
+  }
 `;
 const NotesButtons = styled.div`
   display: flex;

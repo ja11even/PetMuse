@@ -469,7 +469,7 @@ const HeaderContainer = styled.div`
 const HeaderText = styled.p`
   font-size: 1.1rem;
   @media (max-width: 767px) {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
 `;
 const TriDiv = styled.div``;

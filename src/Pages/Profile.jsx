@@ -15,10 +15,7 @@ const HealthLogsContainer = styled.div`
   display: flex;
   height: 100dvh;
   background-color: #ffffff;
-  overflow: hidden;
   @media (max-width: 767px) {
-    overflow-x: hidden;
-    flex-direction: row;
   }
 `;
 export default Profile;

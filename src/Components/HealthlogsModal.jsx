@@ -10,27 +10,7 @@ import DateInput from "./DateInput";
 import { format } from "date-fns";
 import SpinnerMini from "./SpinnerMini";
 import { useSelectedPet } from "./useSelectedPet";
-
-const toggleBodyScrollLock = (shouldLock) => {
-  const body = document.body;
-  const currentScrollY = window.scrollY;
-
-  if (shouldLock) {
-    body.setAttribute("data-scroll-y", currentScrollY.toString());
-    body.style.position = "fixed";
-    body.style.top = `-${currentScrollY}px`;
-    body.style.width = "100%";
-  } else {
-    const storedScrollY = body.getAttribute("data-scroll-y");
-
-    body.style.position = "";
-    body.style.top = "";
-    body.style.width = "";
-    body.style.overflowY = "";
-    window.scrollTo(0, parseInt(storedScrollY || "0", 10));
-    body.removeAttribute("data-scroll-y");
-  }
-};
+import { RemoveScroll } from "react-remove-scroll";
 
 const emptyDefaultValues = {
   log_type: null,
@@ -95,17 +75,6 @@ function HealthlogsModal({ isOpen, onClose, mode, initialData }) {
   }, [reset, onClose]);
 
   useEffect(() => {
-    if (isOpen) {
-      toggleBodyScrollLock(true);
-    } else {
-      toggleBodyScrollLock(false);
-    }
-    return () => {
-      toggleBodyScrollLock(false);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
         onCloseAndReset();
@@ -132,7 +101,20 @@ function HealthlogsModal({ isOpen, onClose, mode, initialData }) {
       reset(emptyDefaultValues);
     }
   }, [isOpen, reset, currentDefaultValues]);
-
+  useEffect(() => {
+    if (isOpen) {
+      window.scrollTo({
+        top: 0,
+        behavior: "instant",
+      });
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
   function convert24hrs(timeStr) {
     const [time, modifier] = timeStr.split(" ");
     let [hours, minutes] = time.split(":");
@@ -250,291 +232,297 @@ function HealthlogsModal({ isOpen, onClose, mode, initialData }) {
   };
 
   return (
-    <Overlay>
-      <ModalContainer ref={modalRef}>
-        <HeaderContainer>
-          <HeaderContainer1>
-            <HeaderTitleContainer>
-              <Title>
-                {mode === "add" ? "Add New Health Log" : "Edit Health Log"}
-              </Title>
-            </HeaderTitleContainer>
-          </HeaderContainer1>
-          <HeaderContainer2>
-            <CloseButton onClick={onCloseAndReset}>
-              <X size={20} color="red" />
-            </CloseButton>
-          </HeaderContainer2>
-        </HeaderContainer>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <PetLogTypeContainer>
-            <LogTypeContainer>
-              <Label>Log Type</Label>
-              <Controller
-                control={control}
-                name="log_type"
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    options={logTypeOptions}
-                    value={logTypeOptions.find(
-                      (opt) => opt.value === field.value
-                    )}
-                    onChange={(opt) => field.onChange(opt ? opt.value : null)}
-                    placeholder="Select type"
-                    isSearchable={false}
-                    styles={customStyle}
-                  />
-                )}
-              />
-              {errors.log_type && <Error>This field is required</Error>}
-            </LogTypeContainer>
-            <TitleContainer>
-              <Label>Title</Label>
-              <Input
-                placeholder="Enter a descriptive title"
-                {...register("title", { required: true })}
-              />
-              {errors.title && <Error>This field is required</Error>}
-            </TitleContainer>
-          </PetLogTypeContainer>
-          {selectedLogType === "vetvisit" && (
-            <>
-              <VetHospitalContainer>
-                <VetContainer>
-                  <Label>Veterinarian</Label>
-                  <Input
-                    placeholder="Dr.Smith"
-                    {...register("veterinarian", { required: true })}
-                  />
-                  {errors.veterinarian && <Error>This field is required</Error>}
-                </VetContainer>
-                <HospitalContainer>
-                  <Label>Clinic/Hospital</Label>
-                  <Input
-                    placeholder="Happy Paws Veterinary Clinic"
-                    {...register("hospital", { required: true })}
-                  />
-                  {errors.hospital && <Error>This field is required</Error>}
-                </HospitalContainer>
-              </VetHospitalContainer>
-              <NextDueDateContainer>
-                <Label>Next Due Date</Label>
-                <Controller
-                  name="due_date"
-                  control={control}
-                  render={({ field }) => (
-                    <DateInput
-                      selectedDate={field.value}
-                      onSelect={field.onChange}
-                    />
-                  )}
-                />
-              </NextDueDateContainer>
-            </>
-          )}
-          {selectedLogType === "vaccination" && (
-            <>
-              <VetHospitalContainer>
-                <VetContainer>
-                  <Label>Veterinarian</Label>
-                  <Input
-                    placeholder="Dr.Smith"
-                    {...register("veterinarian", { required: true })}
-                  />
-                  {errors.veterinarian && <Error>This field is required</Error>}
-                </VetContainer>
-                <HospitalContainer>
-                  <Label>Clinic/Hospital</Label>
-                  <Input
-                    placeholder="Happy Paws Veterinary Clinic"
-                    {...register("hospital", { required: true })}
-                  />
-                  {errors.hospital && <Error>This field is required</Error>}
-                </HospitalContainer>
-              </VetHospitalContainer>
-              <NextDueDateContainer>
-                <Label>Next Due Date</Label>
-                <Controller
-                  name="due_date"
-                  control={control}
-                  render={({ field }) => (
-                    <DateInput
-                      selectedDate={field.value}
-                      onSelect={field.onChange}
-                    />
-                  )}
-                />
-              </NextDueDateContainer>
-            </>
-          )}
-          {selectedLogType === "medication" && (
-            <>
-              <MedicationDosageContainer>
-                <MedicationContainer>
-                  <Label>Medication Name</Label>
-                  <Input
-                    placeholder="Heartgard Plus"
-                    {...register("medication", { required: true })}
-                  />
-                  {errors.medication && <Error>This field is required</Error>}
-                </MedicationContainer>
-                <DosageContainer>
-                  <Label>Dosage</Label>
-                  <Input
-                    placeholder="1 tablet"
-                    {...register("dosage", { required: true })}
-                  />
-                  {errors.dosage && <Error>This field is required</Error>}
-                </DosageContainer>
-              </MedicationDosageContainer>
-              <FrequencyContainer>
-                <Label>Frequency</Label>
-                <Input
-                  placeholder="Once daily"
-                  {...register("frequency", { required: true })}
-                />
-                {errors.frequency && <Error>This field is required</Error>}
-              </FrequencyContainer>
-              <NextDueDateContainer>
-                <Label>Next Due Date</Label>
-                <Controller
-                  name="due_date"
-                  control={control}
-                  render={({ field }) => (
-                    <DateInput
-                      selectedDate={field.value}
-                      onSelect={field.onChange}
-                    />
-                  )}
-                />
-              </NextDueDateContainer>
-            </>
-          )}
-          {selectedLogType === "weightcheck" && (
-            <WeightUnitContainer>
-              <WeightContainer>
-                <Label>Weight</Label>
-                <Input
-                  placeholder="28.5"
-                  {...register("weight", { required: true })}
-                />
-                {errors.weight && <Error>This field is required</Error>}
-              </WeightContainer>
-              <UnitContainer>
-                <Label>Unit</Label>
+    <RemoveScroll enabled={isOpen}>
+      <Overlay>
+        <ModalContainer ref={modalRef}>
+          <HeaderContainer>
+            <HeaderContainer1>
+              <HeaderTitleContainer>
+                <Title>
+                  {mode === "add" ? "Add New Health Log" : "Edit Health Log"}
+                </Title>
+              </HeaderTitleContainer>
+            </HeaderContainer1>
+            <HeaderContainer2>
+              <CloseButton onClick={onCloseAndReset}>
+                <X size={20} color="red" />
+              </CloseButton>
+            </HeaderContainer2>
+          </HeaderContainer>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <PetLogTypeContainer>
+              <LogTypeContainer>
+                <Label>Log Type</Label>
                 <Controller
                   control={control}
-                  name="unit"
+                  name="log_type"
                   rules={{ required: true }}
-                  render={({ field }) => {
-                    const unitTypeOptions = [
-                      { value: "kilograms", label: "Kilograms(kg)" },
-                      { value: "pounds", label: "Pounds (lbs)" },
-                    ];
-                    const selectUnitTypeOption = unitTypeOptions.find(
-                      (opt) => opt.value === field.value
-                    );
-                    return (
-                      <Select
-                        {...field}
-                        options={unitTypeOptions}
-                        value={selectUnitTypeOption}
-                        onChange={(selectUnitTypeOption) =>
-                          field.onChange(
-                            selectUnitTypeOption
-                              ? selectUnitTypeOption.value
-                              : null
-                          )
-                        }
-                        isSearchable={false}
-                        placeholder="Select unit"
-                        styles={customStyle}
+                  render={({ field }) => (
+                    <Select
+                      options={logTypeOptions}
+                      value={logTypeOptions.find(
+                        (opt) => opt.value === field.value
+                      )}
+                      onChange={(opt) => field.onChange(opt ? opt.value : null)}
+                      placeholder="Select type"
+                      isSearchable={false}
+                      styles={customStyle}
+                    />
+                  )}
+                />
+                {errors.log_type && <Error>This field is required</Error>}
+              </LogTypeContainer>
+              <TitleContainer>
+                <Label>Title</Label>
+                <Input
+                  placeholder="Enter a descriptive title"
+                  {...register("title", { required: true })}
+                />
+                {errors.title && <Error>This field is required</Error>}
+              </TitleContainer>
+            </PetLogTypeContainer>
+            {selectedLogType === "vetvisit" && (
+              <>
+                <VetHospitalContainer>
+                  <VetContainer>
+                    <Label>Veterinarian</Label>
+                    <Input
+                      placeholder="Dr.Smith"
+                      {...register("veterinarian", { required: true })}
+                    />
+                    {errors.veterinarian && (
+                      <Error>This field is required</Error>
+                    )}
+                  </VetContainer>
+                  <HospitalContainer>
+                    <Label>Clinic/Hospital</Label>
+                    <Input
+                      placeholder="Happy Paws Veterinary Clinic"
+                      {...register("hospital", { required: true })}
+                    />
+                    {errors.hospital && <Error>This field is required</Error>}
+                  </HospitalContainer>
+                </VetHospitalContainer>
+                <NextDueDateContainer>
+                  <Label>Next Due Date</Label>
+                  <Controller
+                    name="due_date"
+                    control={control}
+                    render={({ field }) => (
+                      <DateInput
+                        selectedDate={field.value}
+                        onSelect={field.onChange}
                       />
-                    );
-                  }}
-                />
-                {errors.unit && <Error>This field is required</Error>}
-              </UnitContainer>
-            </WeightUnitContainer>
-          )}
-          {selectedLogType === "illnesssymptoms" && (
-            <>
-              <SymptomsContainer>
-                <Label>Symptoms</Label>
-                <Input
-                  placeholder="Vomiting, loss of appetite"
-                  {...register("symptoms", { required: true })}
-                />
-                {errors.symptoms && <Error>This field is required</Error>}
-              </SymptomsContainer>
-              <TreatmentContainer>
-                <Label>Treatment</Label>
-                <Input
-                  placeholder="Fasting for 12 hours, bland diet"
-                  {...register("treatment", { required: true })}
-                />
-                {errors.treatment && <Error>This field is required</Error>}
-              </TreatmentContainer>
-            </>
-          )}
-          <ReminderContainer>
-            <ReminderDayContainer>
-              <Label>Reminder Date</Label>
-              <Controller
-                name="reminder_date"
-                control={control}
-                render={({ field }) => (
-                  <DateInput
-                    onSelect={field.onChange}
-                    selectedDate={field.value}
+                    )}
                   />
-                )}
+                </NextDueDateContainer>
+              </>
+            )}
+            {selectedLogType === "vaccination" && (
+              <>
+                <VetHospitalContainer>
+                  <VetContainer>
+                    <Label>Veterinarian</Label>
+                    <Input
+                      placeholder="Dr.Smith"
+                      {...register("veterinarian", { required: true })}
+                    />
+                    {errors.veterinarian && (
+                      <Error>This field is required</Error>
+                    )}
+                  </VetContainer>
+                  <HospitalContainer>
+                    <Label>Clinic/Hospital</Label>
+                    <Input
+                      placeholder="Happy Paws Veterinary Clinic"
+                      {...register("hospital", { required: true })}
+                    />
+                    {errors.hospital && <Error>This field is required</Error>}
+                  </HospitalContainer>
+                </VetHospitalContainer>
+                <NextDueDateContainer>
+                  <Label>Next Due Date</Label>
+                  <Controller
+                    name="due_date"
+                    control={control}
+                    render={({ field }) => (
+                      <DateInput
+                        selectedDate={field.value}
+                        onSelect={field.onChange}
+                      />
+                    )}
+                  />
+                </NextDueDateContainer>
+              </>
+            )}
+            {selectedLogType === "medication" && (
+              <>
+                <MedicationDosageContainer>
+                  <MedicationContainer>
+                    <Label>Medication Name</Label>
+                    <Input
+                      placeholder="Heartgard Plus"
+                      {...register("medication", { required: true })}
+                    />
+                    {errors.medication && <Error>This field is required</Error>}
+                  </MedicationContainer>
+                  <DosageContainer>
+                    <Label>Dosage</Label>
+                    <Input
+                      placeholder="1 tablet"
+                      {...register("dosage", { required: true })}
+                    />
+                    {errors.dosage && <Error>This field is required</Error>}
+                  </DosageContainer>
+                </MedicationDosageContainer>
+                <FrequencyContainer>
+                  <Label>Frequency</Label>
+                  <Input
+                    placeholder="Once daily"
+                    {...register("frequency", { required: true })}
+                  />
+                  {errors.frequency && <Error>This field is required</Error>}
+                </FrequencyContainer>
+                <NextDueDateContainer>
+                  <Label>Next Due Date</Label>
+                  <Controller
+                    name="due_date"
+                    control={control}
+                    render={({ field }) => (
+                      <DateInput
+                        selectedDate={field.value}
+                        onSelect={field.onChange}
+                      />
+                    )}
+                  />
+                </NextDueDateContainer>
+              </>
+            )}
+            {selectedLogType === "weightcheck" && (
+              <WeightUnitContainer>
+                <WeightContainer>
+                  <Label>Weight</Label>
+                  <Input
+                    placeholder="28.5"
+                    {...register("weight", { required: true })}
+                  />
+                  {errors.weight && <Error>This field is required</Error>}
+                </WeightContainer>
+                <UnitContainer>
+                  <Label>Unit</Label>
+                  <Controller
+                    control={control}
+                    name="unit"
+                    rules={{ required: true }}
+                    render={({ field }) => {
+                      const unitTypeOptions = [
+                        { value: "kilograms", label: "Kilograms(kg)" },
+                        { value: "pounds", label: "Pounds (lbs)" },
+                      ];
+                      const selectUnitTypeOption = unitTypeOptions.find(
+                        (opt) => opt.value === field.value
+                      );
+                      return (
+                        <Select
+                          {...field}
+                          options={unitTypeOptions}
+                          value={selectUnitTypeOption}
+                          onChange={(selectUnitTypeOption) =>
+                            field.onChange(
+                              selectUnitTypeOption
+                                ? selectUnitTypeOption.value
+                                : null
+                            )
+                          }
+                          isSearchable={false}
+                          placeholder="Select unit"
+                          styles={customStyle}
+                        />
+                      );
+                    }}
+                  />
+                  {errors.unit && <Error>This field is required</Error>}
+                </UnitContainer>
+              </WeightUnitContainer>
+            )}
+            {selectedLogType === "illnesssymptoms" && (
+              <>
+                <SymptomsContainer>
+                  <Label>Symptoms</Label>
+                  <Input
+                    placeholder="Vomiting, loss of appetite"
+                    {...register("symptoms", { required: true })}
+                  />
+                  {errors.symptoms && <Error>This field is required</Error>}
+                </SymptomsContainer>
+                <TreatmentContainer>
+                  <Label>Treatment</Label>
+                  <Input
+                    placeholder="Fasting for 12 hours, bland diet"
+                    {...register("treatment", { required: true })}
+                  />
+                  {errors.treatment && <Error>This field is required</Error>}
+                </TreatmentContainer>
+              </>
+            )}
+            <ReminderContainer>
+              <ReminderDayContainer>
+                <Label>Reminder Date</Label>
+                <Controller
+                  name="reminder_date"
+                  control={control}
+                  render={({ field }) => (
+                    <DateInput
+                      onSelect={field.onChange}
+                      selectedDate={field.value}
+                    />
+                  )}
+                />
+              </ReminderDayContainer>
+              <ReminderTimeContainer>
+                <Label>Reminder Time</Label>
+                <Controller
+                  name="reminder_time"
+                  control={control}
+                  render={({ field }) => (
+                    <TimePicker onChange={field.onChange} value={field.value} />
+                  )}
+                />
+              </ReminderTimeContainer>
+            </ReminderContainer>
+            <NotesContainer>
+              <Label>Notes</Label>
+              <NotesInput
+                placeholder="Add detailed notes about this health log entry..."
+                {...register("notes", { required: true })}
               />
-            </ReminderDayContainer>
-            <ReminderTimeContainer>
-              <Label>Reminder Time</Label>
-              <Controller
-                name="reminder_time"
-                control={control}
-                render={({ field }) => (
-                  <TimePicker onChange={field.onChange} value={field.value} />
-                )}
-              />
-            </ReminderTimeContainer>
-          </ReminderContainer>
-          <NotesContainer>
-            <Label>Notes</Label>
-            <NotesInput
-              placeholder="Add detailed notes about this health log entry..."
-              {...register("notes", { required: true })}
-            />
-            {errors.notes && <Error>This field is required</Error>}
-          </NotesContainer>
+              {errors.notes && <Error>This field is required</Error>}
+            </NotesContainer>
 
-          <Buttons>
-            <ButtonContainer1></ButtonContainer1>
-            <ButtonContainer2>
-              <CancelButton type="button" onClick={onClose}>
-                Cancel
-              </CancelButton>
-              <SaveButton
-                type="submit"
-                disabled={addHealthlog.isPending || updateHealthlog.isPending}
-              >
-                {addHealthlog.isPending || updateHealthlog.isPending ? (
-                  <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
-                ) : mode === "add" ? (
-                  "Add"
-                ) : (
-                  "Update"
-                )}
-              </SaveButton>
-            </ButtonContainer2>
-          </Buttons>
-        </Form>
-      </ModalContainer>
-    </Overlay>
+            <Buttons>
+              <ButtonContainer1></ButtonContainer1>
+              <ButtonContainer2>
+                <CancelButton type="button" onClick={onClose}>
+                  Cancel
+                </CancelButton>
+                <SaveButton
+                  type="submit"
+                  disabled={addHealthlog.isPending || updateHealthlog.isPending}
+                >
+                  {addHealthlog.isPending || updateHealthlog.isPending ? (
+                    <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
+                  ) : mode === "add" ? (
+                    "Add"
+                  ) : (
+                    "Update"
+                  )}
+                </SaveButton>
+              </ButtonContainer2>
+            </Buttons>
+          </Form>
+        </ModalContainer>
+      </Overlay>
+    </RemoveScroll>
   );
 }
 const Overlay = styled.div`
@@ -543,12 +531,12 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 999;
+  top: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
-  top: 0;
-  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -562,15 +550,15 @@ const ModalContainer = styled.div`
   background-color: white;
   border-radius: 10px;
   width: 650px;
-  height: 480px;
-  max-width: 90%;
+  height: 600px;
+
   display: flex;
   flex-direction: column;
   gap: 1rem;
   overflow-y: auto;
   padding: 1.5rem;
   padding-bottom: 1.7rem;
-  overscroll-behavior: contain;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -578,9 +566,7 @@ const ModalContainer = styled.div`
   -ms-overflow-style: none;
   @media (max-width: 767px) {
     padding: 1.2rem;
-    height: auto;
-    max-height: 90vh;
-    padding-bottom: 2rem;
+    max-width: 92%;
   }
 `;
 
