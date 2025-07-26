@@ -607,6 +607,8 @@ const MainLayoutContainer = styled.div`
   padding: 2rem;
   padding-top: 2.5rem;
   padding-bottom: 2rem;
+  overflow-y: auto;
+  position: relative;
   transition: transform 0.3s ease;
   @media (max-width: 1024px) {
     width: 100%;
@@ -1350,7 +1352,7 @@ const Notes = styled.div`
   padding: 1.5rem;
   border-radius: 10px;
   background-color: white;
-  margin-top: 15px;
+  margin-top: 10px;
   @media (max-width: 767px) {
     padding: 1rem;
   }

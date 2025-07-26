@@ -59,7 +59,7 @@ async function handleTable(
         dateStyle: "medium",
       });
       await resend.emails.send({
-        from: "PetMuse Reminder@reactdev.site",
+        from: "reminders@reactdev.site",
         to: userEmail,
         subject: `⏰ Reminder from PetMuse (${label})`,
         html: `<p>This is your scheduled reminder for your <strong>${label}</strong> at <strong>${readableTime}</strong>.</p>`,

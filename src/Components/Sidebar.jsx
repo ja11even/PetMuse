@@ -139,16 +139,17 @@ const SidebarContainer = styled.aside`
   flex-direction: column;
   width: 100%;
   height: 100vh;
+  top: 0;
+  bottom: 0;
+  align-self: flex-start;
   @media (max-width: 1024px) {
     left: ${({ openSidebar }) => (openSidebar ? "0" : "0")};
     transition: left 0.3s ease;
-    position: fixed;
-    top: 0;
   }
   @media (max-width: 767px) {
     left: ${({ openSidebar }) => (openSidebar ? "0" : "0")};
     transition: left 0.3s ease;
-    top: 0;
+    position: fixed;
   }
 `;
 const FirstContainer = styled.div`
