@@ -170,36 +170,39 @@ function DashboardMainLayout() {
       <SidebarIcon onClick={() => setOpenSidebar(!openSidebar)}>
         <PawPrint color="#ed4a2f" fill="#ed4a2f" />
       </SidebarIcon>
-      <PetSwitcherDiv>
-        <FillerDiv></FillerDiv>
-        <PetSwitcher>
-          {selectedPet && (
-            <>
-              {avatar_url ? (
-                <PetImg>
-                  <PetImage src={avatar_url} />
-                </PetImg>
-              ) : (
-                <PetImg>
-                  <PetCharName>{petChar}</PetCharName>
-                </PetImg>
-              )}
-              <PetName>{selectedPet?.name} </PetName>
-            </>
-          )}
-          {pets?.length > 1 && (
-            <ChevronDown
-              size={21}
-              color="#ed4a2f"
-              ref={toggleButtonRef}
-              onClick={(e) => {
-                e.stopPropagation();
-                setSwitcher((prev) => !prev);
-              }}
-            />
-          )}
-        </PetSwitcher>
-      </PetSwitcherDiv>
+      {pets?.length >= 1 && (
+        <PetSwitcherDiv>
+          <FillerDiv></FillerDiv>
+
+          <PetSwitcher>
+            {selectedPet && (
+              <>
+                {avatar_url ? (
+                  <PetImg>
+                    <PetImage src={avatar_url} />
+                  </PetImg>
+                ) : (
+                  <PetImg>
+                    <PetCharName>{petChar}</PetCharName>
+                  </PetImg>
+                )}
+                <PetName>{selectedPet?.name} </PetName>
+              </>
+            )}
+            {pets?.length > 1 && (
+              <ChevronDown
+                size={21}
+                color="#ed4a2f"
+                ref={toggleButtonRef}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSwitcher((prev) => !prev);
+                }}
+              />
+            )}
+          </PetSwitcher>
+        </PetSwitcherDiv>
+      )}
       <AnimatePresence>
         {switcher && (
           <SwitcherDropdown
@@ -607,6 +610,7 @@ const MainLayoutContainer = styled.div`
   padding: 2rem;
   padding-top: 2.5rem;
   padding-bottom: 2rem;
+  height: 100vh;
   overflow-y: auto;
   position: relative;
   transition: transform 0.3s ease;
@@ -621,6 +625,7 @@ const MainLayoutContainer = styled.div`
     transform: ${({ openSidebar }) =>
       openSidebar ? "translateX(75%)" : "translateX(0)"};
     padding: 2rem 1rem;
+    height: 100%;
   }
 `;
 const FirstContainer = styled.div``;

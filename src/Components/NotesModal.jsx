@@ -180,7 +180,7 @@ const ModalContainer = styled.div`
   gap: 1rem;
   padding-bottom: 0.5rem;
   overflow-y: auto;
-  &::-webkit-scrollbar {
+  s &::-webkit-scrollbar {
     display: none;
   }
   scrollbar-width: none;
