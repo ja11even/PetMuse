@@ -15,7 +15,7 @@ function ForgotPasswordForm() {
     if (!email) return;
     setSubmitting(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: "https://petmuse.vercel.app/reset-password",
     });
     if (error) {
       toast.error(error.message);

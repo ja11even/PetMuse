@@ -34,7 +34,20 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
         }
       : emptyDefaultValues;
   }, [initialData, mode]);
-
+  useEffect(() => {
+    if (isOpen) {
+      window.scrollTo({
+        top: 0,
+        behavior: "instant",
+      });
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
   const onCloseAndReset = useCallback(() => {
     onClose();
     reset(emptyDefaultValues);
@@ -144,6 +157,8 @@ const Overlay = styled.div`
   justify-content: center;
   position: fixed;
   inset: 0;
+  top: 0;
+
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
   @keyframes fadeIn {

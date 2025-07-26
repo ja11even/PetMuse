@@ -46,7 +46,7 @@ function ResetPasswordForm() {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success("Password updated succesfully");
+      toast.success("Password updated successfully");
       navigate("/login");
     }
     setSubmitting(false);

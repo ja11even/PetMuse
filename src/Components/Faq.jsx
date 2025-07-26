@@ -116,7 +116,7 @@ const AccordionItem = styled.div`
   border-bottom: 1px solid #ed4a2f;
   padding: 10px 0;
 `;
-const Question = styled.div`
+const Question = styled(motion.div)`
   display: flex;
   align-items: center;
   padding-bottom: 5px;

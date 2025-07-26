@@ -12,7 +12,7 @@ function LogIn() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: "https://petmuse.vercel.app/dashboard",
       },
     });
     if (error) throw new Error(error.message);
@@ -21,7 +21,7 @@ function LogIn() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "discord",
       options: {
-        redirectTo: `${window.location.origin}/dashboard`,
+        redirectTo: "https://petmuse.vercel.app/dashboard",
       },
     });
     if (error) throw new Error(error.message);

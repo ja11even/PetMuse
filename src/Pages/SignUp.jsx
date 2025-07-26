@@ -12,7 +12,7 @@ function SignUp() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/welcome`,
+        redirectTo: "https://petmuse.vercel.app/welcome",
       },
     });
     if (error) {
@@ -23,7 +23,7 @@ function SignUp() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "discord",
       options: {
-        redirectTo: `${window.location.origin}/welcome`,
+        redirectTo: "https://petmuse.vercel.app/welcome",
       },
     });
     if (error) {

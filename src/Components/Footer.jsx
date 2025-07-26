@@ -58,8 +58,8 @@ function Footer() {
         <Box>
           <BoxTextOneContact>Contact</BoxTextOneContact>
           <BoxTextTwo>
-            <EmailLink href="mailto:reactdev@reactdev.site">
-              reactdev@reactdev.site
+            <EmailLink href="mailto:elijahhyson1@gmail.com">
+              elijahhyson1@gmail.com
             </EmailLink>
           </BoxTextTwo>
         </Box>

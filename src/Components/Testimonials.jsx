@@ -9,7 +9,7 @@ import pet1 from "../assets/pettest1.jpg";
 import pet7 from "../assets/pettest7.jpg";
 const TestimonialData = [
   {
-    text: "\"Keeping track of my dog's meds used to be a mess. This app makes it so easy. It's made a huge difference in my routine\"",
+    text: "\"Keeping track of my baby's meds used to be a mess. This app makes it so easy. It's made a huge difference in my routine\"",
     avatar: pet6,
     name: "Rosemary & Whiskers 🐱 ",
   },
