@@ -521,6 +521,9 @@ const CardContainer1 = styled.div`
   display: flex;
   gap: 0.7rem;
   flex-direction: column;
+  @media (max-width: 1024px) {
+    width: 650px;
+  }
 `;
 const CardIcon = styled.div``;
 const CardInfo = styled.div`

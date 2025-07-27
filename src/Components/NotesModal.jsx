@@ -160,6 +160,8 @@ const Overlay = styled.div`
   top: 0;
   width: 100vw;
   height: 100vh;
+  left: 0;
+
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
   @keyframes fadeIn {

@@ -551,7 +551,6 @@ const ModalContainer = styled.div`
   border-radius: 10px;
   width: 650px;
   height: 600px;
-
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -564,6 +563,9 @@ const ModalContainer = styled.div`
   }
   scrollbar-width: none;
   -ms-overflow-style: none;
+  @media (max-width: 1024px) {
+    height: 520px;
+  }
   @media (max-width: 767px) {
     padding: 1.2rem;
     max-width: 92%;

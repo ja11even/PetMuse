@@ -610,7 +610,6 @@ const MainLayoutContainer = styled.div`
   padding: 2rem;
   padding-top: 2.5rem;
   padding-bottom: 2rem;
-  height: 100vh;
   overflow-y: auto;
   position: relative;
   transition: transform 0.3s ease;
@@ -625,7 +624,6 @@ const MainLayoutContainer = styled.div`
     transform: ${({ openSidebar }) =>
       openSidebar ? "translateX(75%)" : "translateX(0)"};
     padding: 2rem 1rem;
-    height: 100%;
   }
 `;
 const FirstContainer = styled.div``;
@@ -1357,7 +1355,7 @@ const Notes = styled.div`
   padding: 1.5rem;
   border-radius: 10px;
   background-color: white;
-  margin-top: 10px;
+  margin-top: 15px;
   @media (max-width: 767px) {
     padding: 1rem;
   }

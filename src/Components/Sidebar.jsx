@@ -145,6 +145,7 @@ const SidebarContainer = styled.aside`
   @media (max-width: 1024px) {
     left: ${({ openSidebar }) => (openSidebar ? "0" : "0")};
     transition: left 0.3s ease;
+    position: fixed;
   }
   @media (max-width: 767px) {
     left: ${({ openSidebar }) => (openSidebar ? "0" : "0")};

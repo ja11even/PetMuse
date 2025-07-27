@@ -230,7 +230,7 @@ const Card = styled.div`
   gap: 1.5rem;
   display: flex;
   position: relative;
-  margin-top: 25px;
+  margin-top: 15px;
   @media (max-width: 767px) {
     padding: 1rem;
     gap: 0.5rem;
