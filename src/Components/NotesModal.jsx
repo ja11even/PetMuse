@@ -166,13 +166,13 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
 const Overlay = styled.div`
   transition: fadeIn 0.3s ease-in-out;
   display: flex;
-  align-items: center;
+  padding-top: 100px;
   justify-content: center;
   position: fixed;
   top: 0;
   inset: 0;
   width: 100vw;
-  height: 120vh;
+  height: calc(var(--vh, 1vh) * 100);
   left: 0;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;

@@ -20,7 +20,6 @@ const DashboardContainer = styled.div`
   height: 100vh;
   background-color: #ffffff;
   @media (max-width: 767px) {
-    flex-direction: row;
   }
 `;
 

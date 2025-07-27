@@ -542,12 +542,12 @@ function HealthlogsModal({ isOpen, onClose, mode, initialData }) {
 const Overlay = styled.div`
   transition: fadeIn 0.3s ease-in-out;
   display: flex;
-  align-items: center;
   justify-content: center;
+  padding-top: 100px;
   position: fixed;
   top: 0;
   inset: 0;
-  height: 120vh;
+  height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
