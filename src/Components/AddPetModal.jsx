@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import Modal from "react-modal";
+import { useCallback, useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
 import { useUser } from "../Hooks/useUser";
@@ -7,7 +8,6 @@ import { Camera, X } from "lucide-react";
 import { useAddPets, useFetchPets } from "../Hooks/usePets";
 import Select from "react-select";
 import { v4 as uuidv4 } from "uuid";
-import { RemoveScroll } from "react-remove-scroll";
 const emptyDefaultValues = {
   name: "",
   species: "",
@@ -33,7 +33,6 @@ function AddPetModal({ isOpen, onClose, mode, initialPetData }) {
     control,
     formState: { errors, isValid },
   } = useForm({ defaultValues: emptyDefaultValues });
-  const modalRef = useRef(null);
   const onCloseAndReset = useCallback(() => {
     reset(emptyDefaultValues);
     if (previewUrl) {
@@ -49,41 +48,7 @@ function AddPetModal({ isOpen, onClose, mode, initialPetData }) {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onCloseAndReset();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onCloseAndReset]);
-  useEffect(() => {
-    if (isOpen) {
-      window.scrollTo({
-        top: 0,
-        behavior: "instant",
-      });
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
-  useEffect(() => {
-    const setRealHeight = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-    setRealHeight();
-    window.addEventListener("resize", setRealHeight);
 
-    return () => {
-      window.removeEventListener("resize", setRealHeight);
-    };
-  }, []);
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === "Escape") onCloseAndReset();
@@ -91,6 +56,7 @@ function AddPetModal({ isOpen, onClose, mode, initialPetData }) {
     if (isOpen) window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onCloseAndReset]);
+
   useEffect(() => {
     if (!isOpen) return;
     if (mode === "edit" && initialPetData) {
@@ -212,179 +178,162 @@ function AddPetModal({ isOpen, onClose, mode, initialPetData }) {
   };
 
   return (
-    <RemoveScroll enabled={isOpen}>
-      <Overlay>
-        <ModalContainer ref={modalRef}>
-          <HeaderContainer>
-            <HeaderCont1>
-              <Title>
-                {pets.length < 1
-                  ? "Add your first Pet"
-                  : mode === "add"
-                  ? "Add Pet"
-                  : "Edit Pet"}
-              </Title>
-            </HeaderCont1>
-            <HeaderCont2>
-              <CloseButton onClick={onCloseAndReset}>
-                <X size={20} color="red" />
-              </CloseButton>
-            </HeaderCont2>
-          </HeaderContainer>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <PetContainer>
-              <Label>Pet Name</Label>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onCloseAndReset}
+      shouldCloseOnOverlayClick={true}
+      overlayClassName="ReactModal__Overlay"
+      className="ReactModal__Content"
+    >
+      <ModalContainer>
+        <HeaderContainer>
+          <HeaderCont1>
+            <Title>
+              {pets.length < 1
+                ? "Add your first Pet"
+                : mode === "add"
+                ? "Add Pet"
+                : "Edit Pet"}
+            </Title>
+          </HeaderCont1>
+          <HeaderCont2>
+            <CloseButton onClick={onCloseAndReset}>
+              <X size={20} color="red" />
+            </CloseButton>
+          </HeaderCont2>
+        </HeaderContainer>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <PetContainer>
+            <Label>Pet Name</Label>
+            <Input
+              type="text"
+              placeholder="e.g. Bella"
+              {...register("name", { required: true })}
+            />
+            {errors.name && <Error>This field is required</Error>}
+          </PetContainer>
+          <SpeciesContainer>
+            <Label>Species</Label>
+            <Input
+              type="text"
+              placeholder="e.g. Dog"
+              {...register("species", { required: true })}
+            />
+            {errors.species && <Error>This field is required</Error>}
+          </SpeciesContainer>
+          <BreedContainer>
+            <Label>Breed</Label>
+            <Input
+              type="text"
+              placeholder="e.g. Bulldog"
+              {...register("breed", { required: true })}
+            />
+            {errors.breed && <Error>This field is required</Error>}
+          </BreedContainer>
+          <AgeContainer>
+            <Label>Age</Label>
+            <Input
+              type="number"
+              placeholder="e.g. 2"
+              {...register("age", {
+                min: { value: 0, message: "Age must be positive" },
+              })}
+            />
+            {errors.age && <Error>{errors.age.message}</Error>}
+          </AgeContainer>
+          <GenderContainer>
+            <Label>Gender</Label>
+            <Input
+              type="text"
+              placeholder="e.g. Female"
+              {...register("gender", { required: true })}
+            />
+            {errors.gender && <Error>This field is required</Error>}
+          </GenderContainer>
+          <ColorContainer>
+            <Label>Color</Label>
+            <Input
+              type="text"
+              placeholder="e.g. Brown"
+              {...register("color", { required: true })}
+            />
+            {errors.color && <Error>This field is required</Error>}
+          </ColorContainer>
+          <WeightUnitContainer>
+            <WeightContainer>
+              <Label>Weight</Label>
               <Input
-                type="text"
-                placeholder="e.g. Bella"
-                {...register("name", { required: true })}
+                placeholder="e.g. 28.5"
+                {...register("weight", { required: true })}
               />
-              {errors.name && <Error>This field is required</Error>}
-            </PetContainer>
-            <SpeciesContainer>
-              <Label>Species</Label>
-              <Input
-                type="text"
-                placeholder="e.g. Dog"
-                {...register("species", { required: true })}
+              {errors.weight && <Error>This field is required</Error>}
+            </WeightContainer>
+            <UnitContainer>
+              <Label>Unit</Label>
+              <Controller
+                control={control}
+                name="unit"
+                rules={{ required: true }}
+                render={({ field }) => {
+                  const unitTypeOptions = [
+                    { value: "kilograms", label: "Kilograms(kg)" },
+                    { value: "pounds", label: "Pounds (lbs)" },
+                  ];
+                  const selectUnitTypeOption = unitTypeOptions.find(
+                    (opt) => opt.value === field.value
+                  );
+                  return (
+                    <Select
+                      {...field}
+                      options={unitTypeOptions}
+                      value={selectUnitTypeOption}
+                      onChange={(selectUnitTypeOption) =>
+                        field.onChange(
+                          selectUnitTypeOption
+                            ? selectUnitTypeOption.value
+                            : null
+                        )
+                      }
+                      isSearchable={false}
+                      placeholder="Select unit"
+                      styles={customStyle}
+                    />
+                  );
+                }}
               />
-              {errors.species && <Error>This field is required</Error>}
-            </SpeciesContainer>
-            <BreedContainer>
-              <Label>Breed</Label>
-              <Input
-                type="text"
-                placeholder="e.g. Bulldog"
-                {...register("breed", { required: true })}
-              />
-              {errors.breed && <Error>This field is required</Error>}
-            </BreedContainer>
-            <AgeContainer>
-              <Label>Age</Label>
-              <Input
-                type="number"
-                placeholder="e.g. 2"
-                {...register("age", {
-                  min: { value: 0, message: "Age must be positive" },
-                })}
-              />
-              {errors.age && <Error>{errors.age.message}</Error>}
-            </AgeContainer>
-            <GenderContainer>
-              <Label>Gender</Label>
-              <Input
-                type="text"
-                placeholder="e.g. Female"
-                {...register("gender", { required: true })}
-              />
-              {errors.gender && <Error>This field is required</Error>}
-            </GenderContainer>
-            <ColorContainer>
-              <Label>Color</Label>
-              <Input
-                type="text"
-                placeholder="e.g. Brown"
-                {...register("color", { required: true })}
-              />
-              {errors.color && <Error>This field is required</Error>}
-            </ColorContainer>
-            <WeightUnitContainer>
-              <WeightContainer>
-                <Label>Weight</Label>
-                <Input
-                  placeholder="e.g. 28.5"
-                  {...register("weight", { required: true })}
-                />
-                {errors.weight && <Error>This field is required</Error>}
-              </WeightContainer>
-              <UnitContainer>
-                <Label>Unit</Label>
-                <Controller
-                  control={control}
-                  name="unit"
-                  rules={{ required: true }}
-                  render={({ field }) => {
-                    const unitTypeOptions = [
-                      { value: "kilograms", label: "Kilograms(kg)" },
-                      { value: "pounds", label: "Pounds (lbs)" },
-                    ];
-                    const selectUnitTypeOption = unitTypeOptions.find(
-                      (opt) => opt.value === field.value
-                    );
-                    return (
-                      <Select
-                        {...field}
-                        options={unitTypeOptions}
-                        value={selectUnitTypeOption}
-                        onChange={(selectUnitTypeOption) =>
-                          field.onChange(
-                            selectUnitTypeOption
-                              ? selectUnitTypeOption.value
-                              : null
-                          )
-                        }
-                        isSearchable={false}
-                        placeholder="Select unit"
-                        styles={customStyle}
-                      />
-                    );
-                  }}
-                />
-                {errors.unit && <Error>This field is required</Error>}
-              </UnitContainer>
-            </WeightUnitContainer>
-            <PetAvatarContainer>
-              <Label>Pet Avatar</Label>
-              <HiddenInput
-                id="petavatar"
-                onChange={handleFileChange}
-                type="file"
-                accept="image/*"
-              />
-              <LabelAvatar>
-                {previewUrl && <PreviewImg src={previewUrl} alt="petavatar" />}
-                <AvatarLabel htmlFor="petavatar">
-                  <Camera size={20} />
-                  Upload pet avatar
-                </AvatarLabel>
-              </LabelAvatar>
-            </PetAvatarContainer>
-            <Buttons>
-              <CancelBtn type="button" onClick={onCloseAndReset}>
-                Cancel
-              </CancelBtn>
-              <SaveBtn type="submit" disabled={mode === "add" ? !isValid : ""}>
-                {mode === "add" ? "Save Pet" : "Update Pet"}
-              </SaveBtn>
-            </Buttons>
-          </Form>
-        </ModalContainer>
-      </Overlay>
-    </RemoveScroll>
+              {errors.unit && <Error>This field is required</Error>}
+            </UnitContainer>
+          </WeightUnitContainer>
+          <PetAvatarContainer>
+            <Label>Pet Avatar</Label>
+            <HiddenInput
+              id="petavatar"
+              onChange={handleFileChange}
+              type="file"
+              accept="image/*"
+            />
+            <LabelAvatar>
+              {previewUrl && <PreviewImg src={previewUrl} alt="petavatar" />}
+              <AvatarLabel htmlFor="petavatar">
+                <Camera size={20} />
+                Upload pet avatar
+              </AvatarLabel>
+            </LabelAvatar>
+          </PetAvatarContainer>
+          <Buttons>
+            <CancelBtn type="button" onClick={onCloseAndReset}>
+              Cancel
+            </CancelBtn>
+            <SaveBtn type="submit" disabled={mode === "add" ? !isValid : ""}>
+              {mode === "add" ? "Save Pet" : "Update Pet"}
+            </SaveBtn>
+          </Buttons>
+        </Form>
+      </ModalContainer>
+    </Modal>
   );
 }
 
-const Overlay = styled.div`
-  transition: fadeIn 0.3s ease-in-out;
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  display: flex;
-  justify-content: center;
-  padding-top: 100px;
-  z-index: 999;
-  top: 0;
-  height: calc(var(--vh, 1vh) * 100);
-  inset: 0;
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-`;
 const ModalContainer = styled.div`
   max-width: 90%;
   width: 650px;
@@ -394,6 +343,7 @@ const ModalContainer = styled.div`
   padding-bottom: 1.7rem;
   border-radius: 10px;
   display: flex;
+  margin-left: 15px;
   flex-direction: column;
   gap: 1rem;
   overflow-y: auto;

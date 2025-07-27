@@ -1,12 +1,13 @@
+import Modal from "react-modal";
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useAddNotes, useUpdateNotes } from "../Hooks/useNotes";
 import { useUser } from "../Hooks/useUser";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import SpinnerMini from "./SpinnerMini";
 import { useSelectedPet } from "./useSelectedPet";
-import { RemoveScroll } from "react-remove-scroll";
+
 const emptyDefaultValues = {
   title: "",
   notes: "",
@@ -21,11 +22,12 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
   } = useForm({
     defaultValues: emptyDefaultValues,
   });
+
   const { user } = useUser();
   const { selectedPet } = useSelectedPet();
   const addNotes = useAddNotes();
   const updateNotes = useUpdateNotes();
-  const modalRef = useRef();
+
   const currentDefaultValues = useMemo(() => {
     return mode === "edit" && initialData
       ? {
@@ -34,56 +36,6 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
         }
       : emptyDefaultValues;
   }, [initialData, mode]);
-  useEffect(() => {
-    if (isOpen) {
-      window.scrollTo({
-        top: 0,
-        behavior: "instant",
-      });
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    const setRealHeight = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-    setRealHeight();
-    window.addEventListener("resize", setRealHeight);
-
-    return () => {
-      window.removeEventListener("resize", setRealHeight);
-    };
-  }, []);
-  const onCloseAndReset = useCallback(() => {
-    onClose();
-    reset(emptyDefaultValues);
-  }, [reset, onClose]);
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onCloseAndReset();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onCloseAndReset]);
-
-  useEffect(() => {
-    function handleKeyDown(event) {
-      if (event.key === "Escape") {
-        onCloseAndReset();
-      }
-    }
-    if (isOpen) window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onCloseAndReset]);
 
   useEffect(() => {
     if (isOpen) {
@@ -92,6 +44,17 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
       reset(emptyDefaultValues);
     }
   }, [isOpen, reset, currentDefaultValues]);
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === "Escape") onClose();
+    }
+    if (isOpen) window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+  const onCloseAndReset = useCallback(() => {
+    onClose();
+    reset(emptyDefaultValues);
+  }, [reset, onClose]);
 
   function onSubmit(data) {
     const notesData = {
@@ -109,82 +72,64 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
     }
   }
 
-  if (!isOpen) return null;
   return (
-    <RemoveScroll enabled={isOpen}>
-      <Overlay>
-        <ModalContainer ref={modalRef}>
-          <FirstContainer>
-            <First1>New Note</First1>
-            <CloseButton onClick={onCloseAndReset}>
-              <X size={20} color="red" />
-            </CloseButton>
-          </FirstContainer>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <InputDiv>
-              <Input
-                placeholder="Note title..."
-                {...register("title", { required: true })}
-              />
-              {errors.title && <Error>This field is required</Error>}
-            </InputDiv>
-
-            <NotesArea
-              placeholder="Write your notes here..."
-              {...register("notes", { required: true })}
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onCloseAndReset}
+      shouldCloseOnOverlayClick={true}
+      overlayClassName="ReactModal__Overlay"
+      className="ReactModal__Content"
+    >
+      <ModalContainer>
+        <FirstContainer>
+          <First1>New Note</First1>
+          <CloseButton onClick={onCloseAndReset}>
+            <X size={20} color="red" />
+          </CloseButton>
+        </FirstContainer>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <InputDiv>
+            <Input
+              placeholder="Note title..."
+              {...register("title", { required: true })}
             />
-            <Buttons>
-              <ButtonContainer1></ButtonContainer1>
-              <ButtonContainer2>
-                <CancelButton
-                  type="button"
-                  onClick={onCloseAndReset}
-                  disabled={addNotes.isPending || updateNotes.isPending}
-                >
-                  Cancel
-                </CancelButton>
-                <SaveButton
-                  type="submit"
-                  disabled={addNotes.isPending || updateNotes.isPending}
-                >
-                  {addNotes.isPending || updateNotes.isPending ? (
-                    <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
-                  ) : mode === "add" ? (
-                    "Add"
-                  ) : (
-                    "Update"
-                  )}
-                </SaveButton>
-              </ButtonContainer2>
-            </Buttons>
-          </Form>
-        </ModalContainer>
-      </Overlay>
-    </RemoveScroll>
+            {errors.title && <Error>This field is required</Error>}
+          </InputDiv>
+
+          <NotesArea
+            placeholder="Write your notes here..."
+            {...register("notes", { required: true })}
+          />
+          <Buttons>
+            <ButtonContainer1></ButtonContainer1>
+            <ButtonContainer2>
+              <CancelButton
+                type="button"
+                onClick={onCloseAndReset}
+                disabled={addNotes.isPending || updateNotes.isPending}
+              >
+                Cancel
+              </CancelButton>
+              <SaveButton
+                type="submit"
+                disabled={addNotes.isPending || updateNotes.isPending}
+              >
+                {addNotes.isPending || updateNotes.isPending ? (
+                  <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
+                ) : mode === "add" ? (
+                  "Add"
+                ) : (
+                  "Update"
+                )}
+              </SaveButton>
+            </ButtonContainer2>
+          </Buttons>
+        </Form>
+      </ModalContainer>
+    </Modal>
   );
 }
-const Overlay = styled.div`
-  transition: fadeIn 0.3s ease-in-out;
-  display: flex;
-  padding-top: 100px;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  inset: 0;
-  width: 100vw;
-  height: calc(var(--vh, 1vh) * 100);
-  left: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 999;
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-`;
+
 const ModalContainer = styled.div`
   background-color: white;
   border-radius: 10px;
@@ -192,6 +137,7 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-left: 15px;
   height: 500px;
   padding-bottom: 0.5rem;
   overflow-y: auto;

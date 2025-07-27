@@ -16,7 +16,6 @@ const NoteDetailContainer = styled.div`
   background-color: #ffffff;
   @media (max-width: 767px) {
     flex-direction: row;
-    overflow-x: hidden;
   }
 `;
 export default NoteDetailPage;

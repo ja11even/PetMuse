@@ -24,4 +24,25 @@ html{
 body::-webkit-scrollbar{
     display: none;
 }
+
+.ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+}
+
+.ReactModal__Content {
+  position: static !important;
+  inset: auto !important;
+  padding: 0 !important;
+  border: none;
+  background: none;
+  max-width: 100%;
+  width: auto;
+}
+
 `;

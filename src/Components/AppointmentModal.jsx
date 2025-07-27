@@ -1,3 +1,4 @@
+import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import {
@@ -6,7 +7,7 @@ import {
   useUpdateAppointments,
 } from "../Hooks/useAppointments";
 import { Controller } from "react-hook-form";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useUser } from "../Hooks/useUser";
 import { Calendar, Trash, Trash2, X } from "lucide-react";
 import TimePicker from "./TimePicker";
@@ -46,7 +47,6 @@ function AppointmentModal({
   const updateAppointment = useUpdateAppointments();
   const deleteAppointment = useDeleteAppointments();
   const selectedType = watch("event_type");
-  const modalRef = useRef();
   const { selectedPet } = useSelectedPet();
   const onCloseAndReset = () => {
     reset(emptyDefaultValues);
@@ -76,43 +76,6 @@ function AppointmentModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onClose();
-        reset(emptyDefaultValues);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [onClose, reset]);
-
-  useEffect(() => {
-    if (isOpen) {
-      window.scrollTo({
-        top: 0,
-        behavior: "instant",
-      });
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
-  useEffect(() => {
-    const setRealHeight = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-    setRealHeight();
-    window.addEventListener("resize", setRealHeight);
-
-    return () => {
-      window.removeEventListener("resize", setRealHeight);
-    };
-  }, []);
   function convert24hrs(timeStr) {
     const [time, modifier] = timeStr.split(" ");
     let [hours, minutes] = time.split(":");
@@ -223,212 +186,193 @@ function AppointmentModal({
   };
 
   return (
-    <RemoveScroll enabled={isOpen}>
-      <Overlay>
-        <ModalContainer ref={modalRef}>
-          <HeaderContainer>
-            <HeaderContainer1>
-              <HeaderTitleContainer>
-                <Title>
-                  {existingAppointment ? "Edit" : "Add"} Appointment
-                </Title>
-              </HeaderTitleContainer>
-              <SubHeader>
-                {existingAppointment ? "Edit a" : "Create a"} calendar event for
-                your pet
-              </SubHeader>
-            </HeaderContainer1>
-            <HeaderContainer2>
-              <CloseButton onClick={onCloseAndReset}>
-                <X size={20} color="red" />
-              </CloseButton>
-            </HeaderContainer2>
-          </HeaderContainer>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <EventsContainer>
-              <EventTitleContainer>
-                <Label>Event Title</Label>
-                <Input
-                  placeholder="e.g. Annual Checkup"
-                  {...register("event_title", { required: true })}
-                />
-                {errors.event_title && <Error>This field is required</Error>}
-              </EventTitleContainer>
-              <EventTypeContainer>
-                <Label>Event Type</Label>
-                <Controller
-                  control={control}
-                  name="event_type"
-                  rules={{ required: true }}
-                  render={({ field }) => {
-                    const eventTypeOptions = [
-                      { value: "vet", label: "Vet Visit" },
-                      { value: "grooming", label: "Grooming" },
-                      { value: "medication", label: "Medication" },
-                      { value: "training", label: "Training" },
-                      { value: "other", label: "Other" },
-                    ];
-                    const selectedEventType = eventTypeOptions.find(
-                      (opt) => opt.value === field.value
-                    );
-                    return (
-                      <Select
-                        {...field}
-                        value={selectedEventType}
-                        onChange={(selectedEventType) =>
-                          field.onChange(
-                            selectedEventType ? selectedEventType.value : null
-                          )
-                        }
-                        options={eventTypeOptions}
-                        styles={customStyle}
-                        placeholder="Select type"
-                        isSearchable={false}
-                      />
-                    );
-                  }}
-                />
-                {errors.event_type && <Error>This field is required</Error>}
-              </EventTypeContainer>
-            </EventsContainer>
-            {selectedType === "vet" && (
-              <VetContainer>
-                <Label>Veterinarian</Label>
-                <Input
-                  {...register("veterinarian")}
-                  placeholder="e.g. Dr Smith"
-                />
-              </VetContainer>
-            )}
-            <LocationTimeContainer>
-              <LocationContainer>
-                <Label>Location</Label>
-                <Input
-                  placeholder="e.g. Happy Paws Veterinary Clinic"
-                  {...register("location", { required: true })}
-                />
-                {errors.location && <Error>This field is required</Error>}
-              </LocationContainer>
-              <TimeContainer>
-                <Label>Time</Label>
-                <Controller
-                  name="time"
-                  control={control}
-                  render={({ field }) => (
-                    <TimePicker value={field.value} onChange={field.onChange} />
-                  )}
-                />
-              </TimeContainer>
-            </LocationTimeContainer>
-            <ReminderContainer>
-              <ReminderDayContainer>
-                <Label>Reminder Date</Label>
-                <Controller
-                  name="reminder_date"
-                  control={control}
-                  render={({ field }) => (
-                    <DateInput
-                      onSelect={field.onChange}
-                      selectedDate={field.value}
-                    />
-                  )}
-                />
-              </ReminderDayContainer>
-              <ReminderTimeContainer>
-                <Label>Reminder Time</Label>
-                <Controller
-                  name="reminder_time"
-                  control={control}
-                  render={({ field }) => (
-                    <TimePicker onChange={field.onChange} value={field.value} />
-                  )}
-                />
-              </ReminderTimeContainer>
-            </ReminderContainer>
-            <DescriptionContainer>
-              <Label>Description</Label>
-              <DescriptionText
-                {...register("description")}
-                placeholder="Optional notes..."
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onCloseAndReset}
+      shouldCloseOnOverlayClick={true}
+      overlayClassName="ReactModal__Overlay"
+      className="ReactModal__Content"
+    >
+      <ModalContainer>
+        <HeaderContainer>
+          <HeaderContainer1>
+            <HeaderTitleContainer>
+              <Title>{existingAppointment ? "Edit" : "Add"} Appointment</Title>
+            </HeaderTitleContainer>
+            <SubHeader>
+              {existingAppointment ? "Edit a" : "Create a"} calendar event for
+              your pet
+            </SubHeader>
+          </HeaderContainer1>
+          <HeaderContainer2>
+            <CloseButton onClick={onCloseAndReset}>
+              <X size={20} color="red" />
+            </CloseButton>
+          </HeaderContainer2>
+        </HeaderContainer>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <EventsContainer>
+            <EventTitleContainer>
+              <Label>Event Title</Label>
+              <Input
+                placeholder="e.g. Annual Checkup"
+                {...register("event_title", { required: true })}
               />
-            </DescriptionContainer>
-
-            <Buttons>
-              <ButtonContainer1>
-                {existingAppointment && (
-                  <>
-                    <MobileDeleteButton
-                      type="button"
-                      onClick={handleDelete}
-                      disabled={deleteAppointment.isPending}
-                    >
-                      <Trash2 />
-                    </MobileDeleteButton>
-                    <DeleteButton
-                      type="button"
-                      onClick={handleDelete}
-                      disabled={deleteAppointment.isPending}
-                    >
-                      {deleteAppointment.isPending ? (
-                        <SpinnerMini
-                          width="1.6rem"
-                          height="1.6rem"
-                          color="white"
-                        />
-                      ) : (
-                        "Delete"
-                      )}
-                    </DeleteButton>
-                  </>
+              {errors.event_title && <Error>This field is required</Error>}
+            </EventTitleContainer>
+            <EventTypeContainer>
+              <Label>Event Type</Label>
+              <Controller
+                control={control}
+                name="event_type"
+                rules={{ required: true }}
+                render={({ field }) => {
+                  const eventTypeOptions = [
+                    { value: "vet", label: "Vet Visit" },
+                    { value: "grooming", label: "Grooming" },
+                    { value: "medication", label: "Medication" },
+                    { value: "training", label: "Training" },
+                    { value: "other", label: "Other" },
+                  ];
+                  const selectedEventType = eventTypeOptions.find(
+                    (opt) => opt.value === field.value
+                  );
+                  return (
+                    <Select
+                      {...field}
+                      value={selectedEventType}
+                      onChange={(selectedEventType) =>
+                        field.onChange(
+                          selectedEventType ? selectedEventType.value : null
+                        )
+                      }
+                      options={eventTypeOptions}
+                      styles={customStyle}
+                      placeholder="Select type"
+                      isSearchable={false}
+                    />
+                  );
+                }}
+              />
+              {errors.event_type && <Error>This field is required</Error>}
+            </EventTypeContainer>
+          </EventsContainer>
+          {selectedType === "vet" && (
+            <VetContainer>
+              <Label>Veterinarian</Label>
+              <Input
+                {...register("veterinarian")}
+                placeholder="e.g. Dr Smith"
+              />
+            </VetContainer>
+          )}
+          <LocationTimeContainer>
+            <LocationContainer>
+              <Label>Location</Label>
+              <Input
+                placeholder="e.g. Happy Paws Veterinary Clinic"
+                {...register("location", { required: true })}
+              />
+              {errors.location && <Error>This field is required</Error>}
+            </LocationContainer>
+            <TimeContainer>
+              <Label>Time</Label>
+              <Controller
+                name="time"
+                control={control}
+                render={({ field }) => (
+                  <TimePicker value={field.value} onChange={field.onChange} />
                 )}
-              </ButtonContainer1>
-              <ButtonContainer2>
-                <CancelButton type="button" onClick={onCloseAndReset}>
-                  Cancel
-                </CancelButton>
-                <SaveButton
-                  type="submit"
-                  disabled={
-                    addAppointment.isPending || updateAppointment.isPending
-                  }
-                >
-                  {addAppointment.isPending || updateAppointment.isPending ? (
-                    <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
-                  ) : existingAppointment ? (
-                    "Update"
-                  ) : (
-                    "Save"
-                  )}
-                </SaveButton>
-              </ButtonContainer2>
-            </Buttons>
-          </Form>
-        </ModalContainer>
-      </Overlay>
-    </RemoveScroll>
+              />
+            </TimeContainer>
+          </LocationTimeContainer>
+          <ReminderContainer>
+            <ReminderDayContainer>
+              <Label>Reminder Date</Label>
+              <Controller
+                name="reminder_date"
+                control={control}
+                render={({ field }) => (
+                  <DateInput
+                    onSelect={field.onChange}
+                    selectedDate={field.value}
+                  />
+                )}
+              />
+            </ReminderDayContainer>
+            <ReminderTimeContainer>
+              <Label>Reminder Time</Label>
+              <Controller
+                name="reminder_time"
+                control={control}
+                render={({ field }) => (
+                  <TimePicker onChange={field.onChange} value={field.value} />
+                )}
+              />
+            </ReminderTimeContainer>
+          </ReminderContainer>
+          <DescriptionContainer>
+            <Label>Description</Label>
+            <DescriptionText
+              {...register("description")}
+              placeholder="Optional notes..."
+            />
+          </DescriptionContainer>
+
+          <Buttons>
+            <ButtonContainer1>
+              {existingAppointment && (
+                <>
+                  <MobileDeleteButton
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={deleteAppointment.isPending}
+                  >
+                    <Trash2 />
+                  </MobileDeleteButton>
+                  <DeleteButton
+                    type="button"
+                    onClick={handleDelete}
+                    disabled={deleteAppointment.isPending}
+                  >
+                    {deleteAppointment.isPending ? (
+                      <SpinnerMini
+                        width="1.6rem"
+                        height="1.6rem"
+                        color="white"
+                      />
+                    ) : (
+                      "Delete"
+                    )}
+                  </DeleteButton>
+                </>
+              )}
+            </ButtonContainer1>
+            <ButtonContainer2>
+              <CancelButton type="button" onClick={onCloseAndReset}>
+                Cancel
+              </CancelButton>
+              <SaveButton
+                type="submit"
+                disabled={
+                  addAppointment.isPending || updateAppointment.isPending
+                }
+              >
+                {addAppointment.isPending || updateAppointment.isPending ? (
+                  <SpinnerMini width="1.6rem" height="1.6rem" color="white" />
+                ) : existingAppointment ? (
+                  "Update"
+                ) : (
+                  "Save"
+                )}
+              </SaveButton>
+            </ButtonContainer2>
+          </Buttons>
+        </Form>
+      </ModalContainer>
+    </Modal>
   );
 }
-const Overlay = styled.div`
-  animation: fadeIn 0.3s ease-in-out;
-  position: fixed;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  display: flex;
-  justify-content: center;
-  padding-top: 100px;
-  z-index: 999;
-  inset: 0;
-  top: 0;
-  height: calc(var(--vh, 1vh) * 100);
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-`;
 const ModalContainer = styled.div`
   background: white;
   padding: 1.5rem;
@@ -437,6 +381,7 @@ const ModalContainer = styled.div`
   border-radius: 10px;
   display: flex;
   height: 600px;
+  margin-left: 15px;
   flex-direction: column;
   overflow-y: auto;
   gap: 1rem;
