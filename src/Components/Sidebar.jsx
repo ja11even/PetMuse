@@ -18,9 +18,9 @@ import { useLogOut } from "../Hooks/useLogOut";
 function Sidebar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [openSidebar, _setOpenSidebar] = useState(false);
-  const { user } = useUser();
+  const { user, isLoadingUser } = useUser();
   const { mutate: logOut, isPending } = useLogOut();
-  const { pets } = useFetchPets();
+  const { pets, isLoadingPets } = useFetchPets();
   const buttonRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -31,14 +31,17 @@ function Sidebar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   });
-
+  const isLoading = isLoadingUser || isLoadingPets;
   const firstName = user?.user_metadata?.firstName;
   const avatar = user?.user_metadata.avatar_url;
   const handleToast = () => {
     toast("Ooops! You need to add a pet first!");
   };
   return (
-    <SidebarContainer openSidebar={openSidebar}>
+    <SidebarContainer
+      openSidebar={openSidebar}
+      style={{ display: isLoading ? "none" : "flex" }}
+    >
       <FirstContainer>
         <LogoDiv>
           <PawPrint fill="#ed4a2f" />

@@ -161,7 +161,7 @@ function MyPetsMainLayout() {
 }
 const MainLayoutContainer = styled.div`
   flex: 4;
-  overflow-y: scroll;
+  overflow-y: auto;
   background-color: #fce9d0;
   &::-webkit-scrollbar {
     display: none;

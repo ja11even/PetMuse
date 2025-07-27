@@ -11,6 +11,7 @@ body{
     line-height: 1.6;
     font-family: 'MyFont', sans-serif;
     overscroll-behavior: none;
+    height: 100%;
 }
 .react-calendar{
     font-family: "MyFont", sans-serif;

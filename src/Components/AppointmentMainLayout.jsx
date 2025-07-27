@@ -31,6 +31,7 @@ function AppointmentMainLayout() {
 }
 const MainLayoutContainer = styled.div`
   flex: 4;
+  overflow-y: auto;
   background-color: #fce9d0;
   &::-webkit-scrollbar {
     display: none;
@@ -40,6 +41,7 @@ const MainLayoutContainer = styled.div`
   padding: 2rem;
   padding-top: 2.5rem;
   padding-bottom: 2rem;
+  position: relative;
   transition: transform 0.3s ease;
   @media (max-width: 1024px) {
     width: 100%;

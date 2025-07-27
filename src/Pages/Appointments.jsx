@@ -12,7 +12,7 @@ function Appointment() {
 }
 const AppointmentContainer = styled.div`
   display: flex;
-  height: 100dvh;
+  height: 100vh;
   background-color: #ffffff;
   @media (max-width: 767px) {
     flex-direction: row;

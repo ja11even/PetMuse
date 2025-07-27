@@ -602,6 +602,7 @@ function DashboardMainLayout() {
 const MainLayoutContainer = styled.div`
   flex: 4;
   background-color: #fce9d0;
+  overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
   }
@@ -610,11 +611,7 @@ const MainLayoutContainer = styled.div`
   padding: 2rem;
   padding-top: 2.5rem;
   padding-bottom: 2rem;
-  overflow-y: auto;
   position: relative;
-  min-height: 100vh;
-  isolation: isolate;
-  overflow-x: hidden;
   transition: transform 0.3s ease;
   @media (max-width: 1024px) {
     width: 100%;
@@ -830,6 +827,7 @@ const PetSwitcher = styled.div`
 const PetSwitcherDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 `;
 const FillerDiv = styled.div`
   width: 1px;
