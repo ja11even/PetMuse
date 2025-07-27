@@ -11,7 +11,7 @@ import styled from "styled-components";
 import { useUser } from "../Hooks/useUser";
 import { NavLink } from "react-router-dom";
 import { useFetchPets } from "../Hooks/usePets";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import SpinnerMini from "./SpinnerMini";
 import toast from "react-hot-toast";
 import { useLogOut } from "../Hooks/useLogOut";
@@ -19,18 +19,8 @@ function Sidebar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [openSidebar, _setOpenSidebar] = useState(false);
   const { user } = useUser();
-  const { mutate: logOut, isPending } = useLogOut();
+  const { mutate: logOut } = useLogOut();
   const { pets } = useFetchPets();
-  const buttonRef = useRef(null);
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  });
 
   const firstName = user?.user_metadata?.firstName;
   const avatar = user?.user_metadata.avatar_url;
@@ -99,6 +89,10 @@ function Sidebar() {
               <UserRound color="#ed4a2f" />
               My Profile
             </SidebarItem>
+            <SidebarItem onClick={logOut}>
+              <LogOut color="#ed4a2f" />
+              Log Out
+            </SidebarItem>
           </SidebarMenu>
         )}
       </SecondContainer>
@@ -114,18 +108,6 @@ function Sidebar() {
           <UserName>{firstName}</UserName>
           <Email>{user.email}</Email>
         </NameDiv>
-        {showDropdown && (
-          <LogOutButton ref={buttonRef} onClick={logOut} disabled={isPending}>
-            {isPending ? (
-              <SpinnerMini width="1.7rem" height="1.7rem" color="white" />
-            ) : (
-              <>
-                Log Out
-                <LogOut size={20} />
-              </>
-            )}
-          </LogOutButton>
-        )}
       </ThirdContainer>
     </SidebarContainer>
   );
@@ -206,10 +188,6 @@ const SidebarItem = styled(NavLink)`
     background-color: #fce9d0;
     cursor: pointer;
   }
-  &.active {
-    background-color: #fce9d0;
-    color: #ed4a2f;
-  }
   @media (max-width: 1024px) {
     &.active {
       background: transparent;
@@ -277,29 +255,6 @@ const Email = styled.p`
 `;
 const Char = styled.h2`
   color: #ed4a2f;
-`;
-
-const LogOutButton = styled.button`
-  border: none;
-  font-family: inherit;
-  border-radius: 5px;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  background-color: #ed4a2f;
-  width: 140px;
-  bottom: 70px;
-  height: 45px;
-  left: 40px;
-  padding: 0.8rem 0rem;
-  position: absolute;
-  gap: 0.5rem;
-  &:hover {
-    cursor: pointer;
-    background-color: #ed4a2f;
-  }
 `;
 
 export default Sidebar;

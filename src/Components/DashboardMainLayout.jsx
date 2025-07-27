@@ -847,6 +847,7 @@ const PetImg = styled.div`
 const PetImage = styled.img`
   height: 40px;
   width: 40px;
+  object-fit: cover;
   border-radius: 50%;
 `;
 const SwitcherPetImg = styled.div`
@@ -953,6 +954,7 @@ const Img = styled.img`
   height: 130px;
   width: 130px;
   border-radius: 50%;
+  object-fit: cover;
   @media (max-width: 767px) {
     height: 120px;
     width: 120px;

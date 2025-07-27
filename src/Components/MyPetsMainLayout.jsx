@@ -288,6 +288,7 @@ const PetImage = styled.img`
   height: 150px;
   width: 150px;
   border-radius: 50%;
+  object-fit: cover;
   @media (max-width: 767px) {
     height: 115px;
     width: 115px;
