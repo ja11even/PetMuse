@@ -484,7 +484,7 @@ const SearchInput = styled.input`
   background-color: white;
   height: 32px;
   width: 100%;
-  font-size: 0.9rem;
+  font-size: 1rem;
   border-radius: 50px;
   font-family: inherit;
   padding: 0 1rem;

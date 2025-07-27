@@ -48,9 +48,7 @@ function Sidebar() {
       <SecondContainer>
         {pets?.length === 0 ? (
           <SidebarMenu>
-            <LockedSidebarItem
-              style={{ backgroundColor: "#fce9d0", color: "#ed4a2f" }}
-            >
+            <LockedSidebarItem>
               <LayoutDashboard color="#ed4a2f" />
               Dashboard
             </LockedSidebarItem>
@@ -146,11 +144,14 @@ const SidebarContainer = styled.aside`
     left: ${({ openSidebar }) => (openSidebar ? "0" : "0")};
     transition: left 0.3s ease;
     position: fixed;
+    left: 0;
   }
   @media (max-width: 767px) {
-    left: ${({ openSidebar }) => (openSidebar ? "0" : "0")};
-    transition: left 0.3s ease;
+    transform: ${({ openSidebar }) =>
+      openSidebar ? "translateX(0)" : "translateX(0)"};
+    transition: transform 0.3s ease;
     position: fixed;
+    left: 0;
   }
 `;
 const FirstContainer = styled.div`

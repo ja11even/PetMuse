@@ -115,6 +115,20 @@ function HealthlogsModal({ isOpen, onClose, mode, initialData }) {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    const setRealHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    setRealHeight();
+    window.addEventListener("resize", setRealHeight);
+
+    return () => {
+      window.removeEventListener("resize", setRealHeight);
+    };
+  }, []);
+
   function convert24hrs(timeStr) {
     const [time, modifier] = timeStr.split(" ");
     let [hours, minutes] = time.split(":");
@@ -533,8 +547,8 @@ const Overlay = styled.div`
   position: fixed;
   top: 0;
   inset: 0;
+  height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
-  height: 100vh;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
   @keyframes fadeIn {
@@ -569,6 +583,7 @@ const ModalContainer = styled.div`
   @media (max-width: 767px) {
     padding: 1.2rem;
     max-width: 92%;
+    height: 500px;
   }
 `;
 

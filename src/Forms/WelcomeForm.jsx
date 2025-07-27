@@ -103,6 +103,7 @@ const Button = styled.button`
   height: 45px;
   color: white;
   font-family: inherit;
+  font-weight: 400;
   background: #ed4a2f;
   &:hover {
     cursor: pointer;

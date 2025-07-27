@@ -72,7 +72,18 @@ function AddPetModal({ isOpen, onClose, mode, initialPetData }) {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+  useEffect(() => {
+    const setRealHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    setRealHeight();
+    window.addEventListener("resize", setRealHeight);
 
+    return () => {
+      window.removeEventListener("resize", setRealHeight);
+    };
+  }, []);
   useEffect(() => {
     function handleKeyDown(e) {
       if (e.key === "Escape") onCloseAndReset();
@@ -362,6 +373,7 @@ const Overlay = styled.div`
   align-items: center;
   z-index: 999;
   top: 0;
+  height: calc(var(--vh, 1vh) * 100);
   inset: 0;
   @keyframes fadeIn {
     from {
@@ -393,6 +405,7 @@ const ModalContainer = styled.div`
     padding: 1.2rem;
     padding-bottom: 2rem;
     max-width: 92%;
+    height: 500px;
   }
 `;
 const Error = styled.p`

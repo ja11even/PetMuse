@@ -612,6 +612,9 @@ const MainLayoutContainer = styled.div`
   padding-bottom: 2rem;
   overflow-y: auto;
   position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+  overflow-x: hidden;
   transition: transform 0.3s ease;
   @media (max-width: 1024px) {
     width: 100%;

@@ -48,6 +48,19 @@ function NotesModal({ isOpen, onClose, mode, initialData }) {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    const setRealHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    setRealHeight();
+    window.addEventListener("resize", setRealHeight);
+
+    return () => {
+      window.removeEventListener("resize", setRealHeight);
+    };
+  }, []);
   const onCloseAndReset = useCallback(() => {
     onClose();
     reset(emptyDefaultValues);
@@ -159,9 +172,8 @@ const Overlay = styled.div`
   inset: 0;
   top: 0;
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   left: 0;
-
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
   @keyframes fadeIn {
@@ -189,6 +201,7 @@ const ModalContainer = styled.div`
   -ms-overflow-style: none;
   @media (max-width: 767px) {
     max-width: 92%;
+    height: 500px;
   }
 `;
 const Form = styled.form`
