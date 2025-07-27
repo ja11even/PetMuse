@@ -564,7 +564,7 @@ const ModalContainer = styled.div`
   background-color: white;
   border-radius: 10px;
   width: 650px;
-  height: 600px;
+  height: 530px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -795,6 +795,9 @@ const VetHospitalContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  @media (max-width: 767px) {
+    gap: 0.5rem;
+  }
 `;
 const VetContainer = styled.div`
   display: flex;
@@ -822,6 +825,9 @@ const MedicationDosageContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  @media (max-width: 767px) {
+    gap: 0.5rem;
+  }
 `;
 const MedicationContainer = styled.div`
   display: flex;
@@ -845,6 +851,9 @@ const WeightUnitContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1.5rem;
+  @media (max-width: 767px) {
+    gap: 0.5rem;
+  }
 `;
 const WeightContainer = styled.div`
   display: flex;

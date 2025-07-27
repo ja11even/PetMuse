@@ -192,6 +192,7 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  height: 500px;
   padding-bottom: 0.5rem;
   overflow-y: auto;
   s &::-webkit-scrollbar {
