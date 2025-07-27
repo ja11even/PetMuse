@@ -23,7 +23,7 @@ const FullPage = styled.div`
   background-color: #fce9d0;
   display: flex;
   width: 100%;
-  height: 100dvh;
+  height: 100vh;
   align-items: center;
   justify-content: center;
 `;

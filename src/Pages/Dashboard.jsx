@@ -18,7 +18,6 @@ function Dashboard() {
 const DashboardContainer = styled.div`
   display: flex;
   height: 100vh;
-  overflow: hidden;
   background-color: #ffffff;
   @media (max-width: 1024px) {
     height: auto;

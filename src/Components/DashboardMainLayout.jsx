@@ -35,7 +35,6 @@ import NotesModal from "./NotesModal";
 import { useSelectedPet } from "./useSelectedPet";
 import Loader from "./Loader";
 import { AnimatePresence, motion } from "framer-motion";
-import { RemoveScroll } from "react-remove-scroll";
 const HLDetailsHeader = styled.p`
   color: ${(props) => getColor(props.type)};
   font-size: 1.15rem;
