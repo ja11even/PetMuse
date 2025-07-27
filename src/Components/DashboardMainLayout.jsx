@@ -600,8 +600,8 @@ function DashboardMainLayout() {
 
 const MainLayoutContainer = styled.div`
   flex: 4;
-  background-color: #fce9d0;
   overflow-y: auto;
+  background-color: #fce9d0;
   &::-webkit-scrollbar {
     display: none;
   }

@@ -169,10 +169,10 @@ const Overlay = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
-  inset: 0;
   top: 0;
+  inset: 0;
   width: 100vw;
-  height: calc(var(--vh, 1vh) * 100);
+  height: 120vh;
   left: 0;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;

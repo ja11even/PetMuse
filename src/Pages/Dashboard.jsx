@@ -19,12 +19,8 @@ const DashboardContainer = styled.div`
   display: flex;
   height: 100vh;
   background-color: #ffffff;
-  @media (max-width: 1024px) {
-    height: auto;
-  }
   @media (max-width: 767px) {
     flex-direction: row;
-    height: auto;
   }
 `;
 

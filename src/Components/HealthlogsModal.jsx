@@ -547,7 +547,7 @@ const Overlay = styled.div`
   position: fixed;
   top: 0;
   inset: 0;
-  height: calc(var(--vh, 1vh) * 100);
+  height: 120vh;
   width: 100vw;
   background: rgba(0, 0, 0, 0.7);
   z-index: 999;
