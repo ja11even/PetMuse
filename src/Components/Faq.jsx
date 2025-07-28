@@ -13,7 +13,7 @@ const faqData = [
   {
     question: "Is my pet's data secure?",
     answer:
-      "Yes, all your pet's information is stored securely. We will share your data without your permission.",
+      "Yes, all your pet's information is stored securely. We will not share your data without your permission.",
   },
   {
     question: "Can I access PetMuse across devices?",
