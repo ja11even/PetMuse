@@ -202,10 +202,14 @@ function ProfileMainLayout() {
               </EmailDiv>
               <LocationDiv>
                 <Label>Location</Label>
-                <Input
-                  readOnly
-                  value={`${user.user_metadata.city}, ${user.user_metadata.country}`}
-                />
+                {!user.user_metadata.city && !user.user_metadata.country ? (
+                  ""
+                ) : (
+                  <Input
+                    readOnly
+                    value={`${user.user_metadata.city}, ${user.user_metadata.country}`}
+                  />
+                )}
               </LocationDiv>
             </Form>
           </ProfileCard>

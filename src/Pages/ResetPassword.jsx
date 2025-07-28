@@ -97,7 +97,7 @@ const StyledFooterText = styled.p`
   margin-top: 10px;
 `;
 const StyledFooter2 = styled.p`
-  font-size: 1rem;
+  font-size: 0.9rem;
   display: flex;
   gap: 0.3rem;
   align-items: center;

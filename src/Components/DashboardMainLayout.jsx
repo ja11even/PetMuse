@@ -188,17 +188,15 @@ function DashboardMainLayout() {
                 <PetName>{selectedPet?.name} </PetName>
               </>
             )}
-            {pets?.length > 1 && (
-              <ChevronDown
-                size={21}
-                color="#ed4a2f"
-                ref={toggleButtonRef}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSwitcher((prev) => !prev);
-                }}
-              />
-            )}
+            <ChevronDown
+              size={21}
+              color="#ed4a2f"
+              ref={toggleButtonRef}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSwitcher((prev) => !prev);
+              }}
+            />
           </PetSwitcher>
         </PetSwitcherDiv>
       )}
