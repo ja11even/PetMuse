@@ -861,6 +861,7 @@ const SwitcherPetImg = styled.div`
 const SwitcherPetImage = styled.img`
   height: 30px;
   width: 30px;
+  object-fit: cover;
   border-radius: 50%;
 `;
 const SwitcherDropdown = styled(motion.div)`
